@@ -1187,6 +1187,60 @@
 
     .toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
     .toast.is-danger { background: var(--red); color: var(--paper); }
+    .toast1 {
+      position: fixed;
+      right: 20px;
+      bottom: max(22px, env(safe-area-inset-bottom));
+      left: 20px;
+      z-index: 240;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: fit-content;
+      max-width: min(460px, calc(100vw - 40px));
+      margin: 0 auto;
+      padding: 12px 17px 12px 13px;
+      border: 1px solid rgba(255, 253, 247, 0.18);
+      border-radius: 13px;
+      background: var(--red);
+      color: var(--paper);
+      box-shadow: 0 16px 42px rgba(29, 42, 38, 0.25);
+      font-size: 13px;
+      font-weight: 650;
+      line-height: 1.5;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(14px);
+      transition: opacity 0.28s ease, transform 0.28s ease;
+    }
+
+    .toast1.is-visible { opacity: 1; transform: translateY(0); }
+
+    .toast1__icon {
+      display: grid;
+      width: 22px;
+      height: 22px;
+      flex: 0 0 22px;
+      place-items: center;
+      border: 1px solid rgba(255, 253, 247, 0.55);
+      border-radius: 50%;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    @media (max-width: 520px) {
+      .toast1 {
+        right: 12px;
+        bottom: max(14px, env(safe-area-inset-bottom));
+        left: 12px;
+        max-width: none;
+        padding: 11px 13px 11px 11px;
+        font-size: 12px;
+      }
+    }
+
 
     /* ==========================================================
        07. 响应式
@@ -1319,7 +1373,7 @@
                 </div>
                 <div class="input-shell">
                   <span class="prefix" aria-hidden="true">¥</span>
-                  <input id="budget" name="budget" type="number" min="0" step="0.01" inputmode="decimal" placeholder="1000" autocomplete="off" aria-describedby="budget-error">
+                  <input id="budget" name="budget" type="text" inputmode="decimal" maxlength="12" placeholder="1000" autocomplete="off" spellcheck="false" aria-describedby="budget-error">
                   <span class="suffix">元</span>
                 </div>
                 <p class="error" id="budget-error" role="alert"></p>
@@ -1332,7 +1386,7 @@
                 </div>
                 <div class="input-shell">
                   <span class="prefix" aria-hidden="true">¥</span>
-                  <input id="spend" name="spend" type="number" min="0" step="0.01" inputmode="decimal" placeholder="800" autocomplete="off" aria-describedby="spend-error">
+                  <input id="spend" name="spend" type="text" inputmode="decimal" maxlength="12" placeholder="800" autocomplete="off" spellcheck="false" aria-describedby="spend-error">
                   <span class="suffix">元</span>
                 </div>
                 <p class="error" id="spend-error" role="alert"></p>
@@ -1372,7 +1426,7 @@
                 <span aria-hidden="true">↗</span>
               </button>
 
-              <p class="form__note">计算只在本机进行，不上传任何数据；金额支持小数。</p>
+              <p class="form__note">输入错误会弹出红色 Toast1；计算只在本机进行，不上传任何数据。</p>
             </div>
           </form>
 
@@ -1461,7 +1515,7 @@
           <article class="rule-card rule-card--danger">
             <div class="rule-card__top"><span>03 / DANGER</span><strong>≤ 20%</strong></div>
             <h3>吃土预警</h3>
-            <p>立即停止非必要消费，先保证吃饭和交通；已经超支就如实记账。</p>
+            <p>立即停止非必要消费，先保证吃饭和交通；金额超过预算会被直接拦截。</p>
           </article>
         </div>
 
@@ -1469,11 +1523,12 @@
           <div>
             <h3>防错清单 <span>GUARDRAILS</span></h3>
             <ul>
-              <li>总预算为空、非数字或 0 / 负数</li>
-              <li>今日消费为空、非数字或负数</li>
-              <li>消费金额大于总预算 → 超支预警</li>
-              <li>消费类别没有选中</li>
-              <li>金额支持小数，结果保留合理精度</li>
+              <li>总预算 / 今日消费为空 →「请输入正确数字」</li>
+              <li>输入汉字、字母、符号 →「请输入正确数字」</li>
+              <li>负数 →「金额不能为负数」</li>
+              <li>超过两位小数 →「最多输入两位小数」</li>
+              <li>消费金额大于总预算 → 直接拦截</li>
+              <li>单笔金额超过 1,000,000 →「数值超出合理范围」</li>
             </ul>
           </div>
           <div>
@@ -1500,6 +1555,10 @@
   </footer>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="toast1" id="toast1" role="alert" aria-live="assertive" aria-atomic="true">
+    <span class="toast1__icon" aria-hidden="true">!</span>
+    <span id="toast1-text"></span>
+  </div>
   <canvas id="bill-canvas" width="1080" height="1440" style="display:none" aria-hidden="true"></canvas>
 
   <script>
@@ -1533,6 +1592,8 @@
       var footStatus = document.getElementById('foot-status');
       var exampleBtn = document.getElementById('example-btn');
       var toast = document.getElementById('toast');
+      var toast1 = document.getElementById('toast1');
+      var toast1Text = document.getElementById('toast1-text');
       var canvas = document.getElementById('bill-canvas');
       var state = {
         submitted: false,
@@ -1540,6 +1601,8 @@
         result: null
       };
       var toastTimer;
+      var toast1Timer;
+      var MAX_AMOUNT = 1000000;
 
       var CATEGORY_LABELS = {
         '餐饮': '餐饮',
@@ -1547,8 +1610,26 @@
         '学习': '学习'
       };
 
+      function hideToast1() {
+        if (!toast1) return;
+        window.clearTimeout(toast1Timer);
+        toast1.classList.remove('is-visible');
+      }
+
+      function showToast1(message) {
+        if (!toast1) return;
+        hideToast();
+        toast1Text.textContent = message;
+        toast1.classList.add('is-visible');
+        window.clearTimeout(toast1Timer);
+        toast1Timer = window.setTimeout(function () {
+          toast1.classList.remove('is-visible');
+        }, 3200);
+      }
+
       function showToast(message, tone) {
         if (!toast) return;
+        hideToast1();
         toast.textContent = message;
         toast.classList.toggle('is-danger', tone === 'danger');
         toast.classList.add('is-visible');
@@ -1598,38 +1679,44 @@
         categoryInputs.forEach(function (input) { input.setAttribute('aria-invalid', 'false'); });
       }
 
-      function numberValue(input) {
+      function amountValue(input) {
         var raw = input.value.trim();
-        if (!raw) return { empty: true };
+        if (!raw) return { message: '请输入正确数字' };
+        if (raw.charAt(0) === '-') return { message: '金额不能为负数' };
+        if (!/^(?:\d+(?:\.\d{1,2})?|\.\d{1,2})$/.test(raw)) {
+          if (/^\d+\.\d{3,}$/.test(raw)) return { message: '最多输入两位小数' };
+          return { message: '请输入正确数字' };
+        }
         var value = Number(raw);
-        if (!Number.isFinite(value)) return { invalid: true };
+        if (!Number.isFinite(value)) return { message: '请输入正确数字' };
+        if (value > MAX_AMOUNT) return { message: '数值超出合理范围' };
         return { value: value };
       }
 
-      function validate(showErrors) {
+      function validate(showErrors, notify) {
         var errors = [];
-        var budgetResult = numberValue(budgetInput);
-        var spendResult = numberValue(spendInput);
+        var budgetResult = amountValue(budgetInput);
+        var spendResult = amountValue(spendInput);
         var categoryInput = categoryInputs.filter(function (input) { return input.checked; })[0];
 
-        if (budgetResult.empty) {
-          errors.push({ field: budgetField, input: budgetInput, message: '请填写本月总预算' });
-        } else if (budgetResult.invalid) {
-          errors.push({ field: budgetField, input: budgetInput, message: '请输入有效的预算数字' });
+        if (budgetResult.message) {
+          errors.push({ field: budgetField, input: budgetInput, message: budgetResult.message });
         } else if (budgetResult.value <= 0) {
           errors.push({ field: budgetField, input: budgetInput, message: '总预算必须大于 0' });
         }
 
-        if (spendResult.empty) {
-          errors.push({ field: spendField, input: spendInput, message: '请填写今日消费金额' });
-        } else if (spendResult.invalid) {
-          errors.push({ field: spendField, input: spendInput, message: '请输入有效的消费数字' });
+        if (spendResult.message) {
+          errors.push({ field: spendField, input: spendInput, message: spendResult.message });
         } else if (spendResult.value < 0) {
-          errors.push({ field: spendField, input: spendInput, message: '今日消费不能是负数' });
+          errors.push({ field: spendField, input: spendInput, message: '金额不能为负数' });
         }
 
         if (!categoryInput) {
           errors.push({ field: categoryField, input: null, message: '请选择一个消费类别' });
+        }
+
+        if (!budgetResult.message && !spendResult.message && spendResult.value > budgetResult.value) {
+          errors.push({ field: spendField, input: spendInput, message: '消费金额不能大于总预算' });
         }
 
         if (showErrors) {
@@ -1644,6 +1731,7 @@
               var radio = categoryInputs[0];
               if (radio) radio.focus();
             }
+            if (notify) showToast1(first.message);
           }
         }
 
@@ -1824,7 +1912,7 @@
         event.preventDefault();
         state.submitted = true;
         state.touched = { budget: true, spend: true, category: true };
-        var data = validate(true);
+        var data = validate(true, true);
         if (!data) {
           hideToast();
           emptyResult(true);
@@ -1837,6 +1925,7 @@
 
       form.addEventListener('reset', function () {
         hideToast();
+        hideToast1();
         window.setTimeout(function () {
           state.submitted = false;
           state.touched = { budget: false, spend: false, category: false };
