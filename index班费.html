@@ -1,0 +1,2119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>班费簿｜每一笔班费，都要花得明白</title>
+  <meta name="description" content="先设本学期班费总额，再逐笔记账；自动计算已花与剩余，剩余低于 20% 时提醒，支持分类明细、清空确认与分享链接。">
+  <meta name="theme-color" content="#f1ede3">
+  <meta name="color-scheme" content="light">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231d2b32'/%3E%3Ctext x='32' y='45' text-anchor='middle' font-family='Arial' font-weight='700' font-size='32' fill='%23f5efe3'%3E班%3C/text%3E%3C/svg%3E">
+  <style>
+    /* ==========================================================
+       01. 基础
+       ========================================================== */
+    :root {
+      --bg: #f1ede3;
+      --paper: #fffdf7;
+      --paper-2: #e9e2d4;
+      --paper-3: #ded5c3;
+      --ink: #1d2b32;
+      --ink-2: #32464a;
+      --muted: #6f7d7b;
+      --line: #d9d0be;
+      --line-strong: #c4b8a3;
+      --accent: #2f6657;
+      --accent-deep: #214b40;
+      --accent-soft: #e2eee8;
+      --danger: #b13d34;
+      --danger-deep: #872b25;
+      --danger-soft: #f8e2dd;
+      --amber: #a56b1f;
+      --amber-soft: #f7edd8;
+      --blue: #3d6d8e;
+      --blue-soft: #e4eef4;
+      --violet: #79557c;
+      --violet-soft: #efe6f0;
+      --gold: #b78a33;
+      --gold-soft: #f6edd8;
+      --shadow: 0 24px 70px rgba(29, 43, 50, 0.12);
+      --shadow-soft: 0 12px 32px rgba(29, 43, 50, 0.07);
+      --serif: "Songti SC", "STSong", "Noto Serif SC", "SimSun", serif;
+      --sans: "MiSans", "HarmonyOS Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      --mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { background: var(--bg); scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+    body {
+      min-width: 320px;
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        linear-gradient(rgba(29, 43, 50, 0.028) 1px, transparent 1px),
+        radial-gradient(700px 480px at 94% -8%, rgba(47, 102, 87, 0.12), transparent 64%),
+        radial-gradient(620px 460px at -8% 18%, rgba(177, 61, 52, 0.06), transparent 62%),
+        var(--bg);
+      background-size: 100% 32px, auto, auto, auto;
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    ::selection { background: #d9e9df; color: var(--ink); }
+    a { color: inherit; text-decoration: none; }
+    button { padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
+    input, select { font: inherit; }
+    fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+    legend { padding: 0; }
+    img, svg { display: block; max-width: 100%; }
+    h1, h2, h3, p, dl, dd, ul { margin: 0; }
+    ul { padding: 0; list-style: none; }
+
+    :focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 4px; }
+
+    [hidden] { display: none !important; }
+
+    .container { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
+
+    .mono {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .serif { font-family: var(--serif); }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ==========================================================
+       02. 头部
+       ========================================================== */
+    .site-header { position: relative; z-index: 10; padding: 18px 0 0; }
+
+    .header__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand { display: inline-flex; align-items: center; gap: 11px; }
+
+    .brand__mark {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border-radius: 11px;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1;
+      box-shadow: 0 8px 20px rgba(29, 43, 50, 0.16);
+      transition: transform 0.35s ease;
+    }
+
+    .brand:hover .brand__mark { transform: rotate(-7deg); }
+
+    .brand__text { display: flex; flex-direction: column; gap: 1px; }
+    .brand__name {
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      line-height: 1.2;
+    }
+    .brand__sub {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      line-height: 1.4;
+    }
+
+    .header__actions { display: flex; align-items: center; gap: 8px; }
+
+    .ghost-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 38px;
+      padding: 0 13px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      color: var(--ink-2);
+      font-size: 11px;
+      font-weight: 650;
+      line-height: 1;
+      transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+    }
+
+    .ghost-btn:hover { background: var(--ink); color: var(--paper); transform: translateY(-2px); }
+    .ghost-btn.is-copied { background: var(--accent); border-color: var(--accent); color: var(--paper); }
+    .ghost-btn svg { width: 13px; height: 13px; }
+
+    .header__tag {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.08em;
+    }
+
+    /* ==========================================================
+       03. 首屏
+       ========================================================== */
+    .hero { position: relative; padding: clamp(34px, 4.8vw, 56px) 0 clamp(20px, 3vw, 30px); }
+
+    .hero::after {
+      content: "¥";
+      position: absolute;
+      top: -6%;
+      right: -1%;
+      z-index: -1;
+      color: transparent;
+      font-family: var(--serif);
+      font-size: clamp(260px, 35vw, 470px);
+      font-weight: 700;
+      line-height: 1;
+      opacity: 0.05;
+      -webkit-text-stroke: 1px var(--ink);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.1em;
+      line-height: 1;
+      background: rgba(255, 253, 247, 0.45);
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .hero h1 {
+      max-width: 760px;
+      margin: 16px 0 14px;
+      font-family: var(--serif);
+      font-size: clamp(3.1rem, 7vw, 5.8rem);
+      font-weight: 700;
+      letter-spacing: -0.075em;
+      line-height: 0.95;
+    }
+
+    .hero h1 em { color: var(--accent); font-style: normal; }
+
+    .hero__lead {
+      max-width: 600px;
+      color: var(--ink-2);
+      font-size: 14.5px;
+      line-height: 1.9;
+    }
+
+    .hero__lead strong { color: var(--ink); font-weight: 750; }
+
+    .hero__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 16px;
+    }
+
+    /* 记账状态下把首屏收起来，让数据先出现 */
+    body.is-ready .hero { padding: 22px 0 14px; }
+    body.is-ready .hero h1 {
+      max-width: 940px;
+      margin: 8px 0 0;
+      font-size: clamp(2.35rem, 4.1vw, 3.35rem);
+      letter-spacing: -0.045em;
+      line-height: 1.1;
+    }
+    body.is-ready .hero h1 br { display: none; }
+    body.is-ready .hero__lead,
+    body.is-ready .hero__meta,
+    body.is-ready .hero::after { display: none; }
+    body.is-ready .eyebrow { padding: 5px 9px; }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.5;
+      background: rgba(255, 253, 247, 0.42);
+    }
+
+    .meta-pill::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .meta-pill:nth-child(2)::before { background: var(--amber); }
+    .meta-pill:nth-child(3)::before { background: var(--danger); }
+
+    /* ==========================================================
+       04. 初始设置
+       ========================================================== */
+    .setup { padding: 14px 0 clamp(50px, 7vw, 80px); }
+
+    .setup__grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .setup-card {
+      padding: clamp(24px, 4vw, 40px);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background:
+        radial-gradient(120% 80% at 100% 0%, rgba(47, 102, 87, 0.08), transparent 55%),
+        var(--paper);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .setup-card h2 {
+      max-width: 520px;
+      margin: 13px 0 10px;
+      font-family: var(--serif);
+      font-size: clamp(2rem, 3.2vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+    }
+
+    .setup-card > p {
+      max-width: 520px;
+      color: var(--ink-2);
+      font-size: 13.5px;
+      line-height: 1.85;
+    }
+
+    .setup-form { margin-top: 24px; }
+
+    .setup-field { max-width: 500px; }
+    .setup-label {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 750;
+    }
+    .setup-label span {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 8px;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+    }
+
+    .money-input {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 68px;
+      padding: 8px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 14px;
+      background: rgba(255, 253, 247, 0.8);
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+
+    .money-input:focus-within {
+      border-color: var(--ink);
+      background: var(--paper);
+      box-shadow: 0 0 0 4px rgba(47, 102, 87, 0.09);
+    }
+
+    .money-input .currency {
+      color: var(--muted);
+      font-family: var(--serif);
+      font-size: 25px;
+      line-height: 1;
+    }
+
+    .money-input input {
+      width: 100%;
+      min-width: 0;
+      padding: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 35px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      appearance: none;
+    }
+
+    .money-input input::placeholder { color: #b5ad9f; font-weight: 500; }
+
+    .quick-picks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .quick-pick {
+      padding: 5px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 8px;
+      line-height: 1.5;
+      transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .quick-pick:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+    .field-error {
+      min-height: 18px;
+      padding-top: 4px;
+      color: var(--danger);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .primary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 0 20px;
+      border: 1px solid var(--ink);
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--paper);
+      font-size: 13px;
+      font-weight: 750;
+      line-height: 1;
+      box-shadow: 0 10px 24px rgba(29, 43, 50, 0.14);
+      transition: transform 0.28s ease, box-shadow 0.28s ease, background 0.28s ease;
+    }
+
+    .primary-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(29, 43, 50, 0.2); }
+    .primary-btn svg { width: 15px; height: 15px; }
+
+    .setup-submit { margin-top: 15px; }
+
+    .privacy-note {
+      display: flex;
+      gap: 7px;
+      align-items: flex-start;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--line);
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.6;
+    }
+
+    .privacy-note::before { content: "●"; color: var(--accent); font-size: 7px; line-height: 1.9; }
+
+    .setup-side {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .rule-preview {
+      flex: 1;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--ink);
+      color: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .rule-preview .mono { color: #a7bbb2; }
+    .rule-preview h3 {
+      margin: 13px 0 8px;
+      font-family: var(--serif);
+      font-size: 25px;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+    .rule-preview strong {
+      display: block;
+      color: #d9e9df;
+      font-family: var(--serif);
+      font-size: clamp(3.5rem, 7vw, 5.3rem);
+      font-weight: 700;
+      letter-spacing: -0.07em;
+      line-height: 1;
+    }
+    .rule-preview p { margin-top: 13px; color: #bfd0c9; font-size: 11.5px; line-height: 1.8; }
+
+    .setup-steps {
+      padding: 17px 19px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 253, 247, 0.55);
+    }
+
+    .setup-steps ol {
+      display: grid;
+      gap: 8px;
+      margin: 8px 0 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: step;
+    }
+
+    .setup-steps li {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.6;
+      counter-increment: step;
+    }
+
+    .setup-steps li::before {
+      content: "0" counter(step);
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 8px;
+    }
+
+    /* ==========================================================
+       05. 总览 + 工作区
+       ========================================================== */
+    .dashboard { padding: 12px 0 clamp(55px, 7vw, 84px); }
+
+    .dash-grid {
+      display: grid;
+      grid-template-columns: minmax(330px, 0.83fr) minmax(0, 1.17fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--paper);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .summary {
+      position: sticky;
+      top: 18px;
+      overflow: hidden;
+      padding: 23px;
+      border-color: rgba(255, 253, 247, 0.04);
+      background:
+        radial-gradient(110% 80% at 100% 0%, rgba(47, 102, 87, 0.32), transparent 58%),
+        linear-gradient(155deg, #1d2b32, #263a3d);
+      color: var(--paper);
+      transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .summary.is-warning {
+      background:
+        radial-gradient(110% 80% at 100% 0%, rgba(177, 61, 52, 0.34), transparent 58%),
+        linear-gradient(155deg, #1d2b32, #263a3d);
+      border-color: rgba(177, 61, 52, 0.58);
+      box-shadow: 0 24px 70px rgba(177, 61, 52, 0.15);
+    }
+
+    .summary__top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .summary__top .mono { color: #a9bdb5; }
+
+    .text-btn {
+      color: #b9ccc3;
+      font-size: 10px;
+      line-height: 1.5;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color 0.25s ease;
+    }
+    .text-btn:hover { color: var(--paper); }
+
+    .summary__label {
+      margin-top: 22px;
+      color: #a9bdb5;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    .summary__total {
+      margin: 2px 0 19px;
+      color: var(--paper);
+      font-family: var(--serif);
+      font-size: clamp(2.7rem, 5vw, 4.1rem);
+      font-weight: 700;
+      letter-spacing: -0.06em;
+      line-height: 1;
+    }
+
+    .summary__stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid rgba(255, 253, 247, 0.14);
+      border-bottom: 1px solid rgba(255, 253, 247, 0.14);
+    }
+
+    .summary__stats > div { padding: 12px 10px 13px 0; }
+    .summary__stats > div + div { padding-left: 13px; border-left: 1px solid rgba(255, 253, 247, 0.14); }
+    .summary__stats span { display: block; color: #a9bdb5; font-size: 10px; line-height: 1.5; }
+    .summary__stats strong {
+      display: block;
+      margin-top: 3px;
+      color: var(--paper);
+      font-family: var(--serif);
+      font-size: 21px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .summary__stats strong.is-low { color: #f0aaa0; }
+
+    .ratio-line {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 14px;
+      color: #a9bdb5;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .ratio-line span:last-child {
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    .progress {
+      position: relative;
+      height: 9px;
+      overflow: hidden;
+      margin-top: 7px;
+      border-radius: 999px;
+      background: rgba(255, 253, 247, 0.16);
+    }
+
+    .progress__fill {
+      display: block;
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #6eaa93, #d8eadf);
+      transition: width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.35s ease;
+    }
+
+    .is-warning .progress__fill { background: linear-gradient(90deg, #e17a6e, #f2b2a8); }
+
+    .progress__marker {
+      position: absolute;
+      top: -3px;
+      bottom: -3px;
+      left: 80%;
+      width: 2px;
+      border-radius: 2px;
+      background: rgba(255, 253, 247, 0.8);
+    }
+
+    .health,
+    .alert {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      margin-top: 15px;
+      padding: 11px 12px;
+      border-radius: 11px;
+      font-size: 10.5px;
+      line-height: 1.65;
+    }
+
+    .health {
+      border: 1px solid rgba(168, 210, 192, 0.22);
+      background: rgba(168, 210, 192, 0.09);
+      color: #d0e0d8;
+      font-size: 11px;
+    }
+
+    .health > span {
+      width: 7px;
+      height: 7px;
+      flex: 0 0 7px;
+      margin-top: 5px;
+      border-radius: 50%;
+      background: #9ccbb6;
+      box-shadow: 0 0 0 4px rgba(156, 203, 182, 0.12);
+    }
+
+    .health strong,
+    .alert strong { display: block; color: var(--paper); font-size: 11.5px; font-weight: 800; line-height: 1.5; }
+    .health small { display: block; color: #9db5ab; font-size: 9.5px; line-height: 1.5; }
+
+    .alert {
+      border: 1px solid rgba(241, 157, 144, 0.32);
+      font-size: 11.5px;
+      background: rgba(177, 61, 52, 0.25);
+      color: #ffd8d1;
+    }
+
+    .alert__icon {
+      display: grid;
+      width: 22px;
+      height: 22px;
+      flex: 0 0 22px;
+      margin-top: 1px;
+      place-items: center;
+      border: 1px solid rgba(255, 216, 209, 0.45);
+      border-radius: 50%;
+      color: #ffe2dc;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      animation: alertPulse 1.8s ease-in-out infinite;
+    }
+
+    .alert p { margin-top: 3px; }
+
+    @keyframes alertPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(241, 157, 144, 0); }
+      50% { box-shadow: 0 0 0 5px rgba(241, 157, 144, 0.12); }
+    }
+
+    .subsection-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 17px 0 8px;
+      color: #a9bdb5;
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.07em;
+    }
+
+    .breakdown-list { display: flex; flex-wrap: wrap; gap: 5px; }
+
+    .breakdown-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 7px;
+      border: 1px solid rgba(255, 253, 247, 0.14);
+      border-radius: 999px;
+      color: #d7e4dd;
+      font-size: 9px;
+      line-height: 1.5;
+    }
+
+    .breakdown-chip i { width: 5px; height: 5px; border-radius: 50%; background: var(--cat-color, #b9ccc3); }
+    .breakdown-chip b { color: var(--paper); font-weight: 650; }
+
+    .breakdown-empty { color: #9db5ab; font-size: 10px; line-height: 1.5; }
+
+    .share-box {
+      margin-top: 18px;
+      padding-top: 13px;
+      border-top: 1px solid rgba(255, 253, 247, 0.14);
+    }
+
+    .share-box label {
+      display: block;
+      margin-bottom: 6px;
+      color: #a9bdb5;
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.06em;
+    }
+
+    .share-row { display: flex; gap: 5px; }
+
+    .share-row input {
+      width: 100%;
+      min-width: 0;
+      height: 34px;
+      padding: 0 9px;
+      border: 1px solid rgba(255, 253, 247, 0.18);
+      border-radius: 8px;
+      outline: 0;
+      background: rgba(255, 253, 247, 0.08);
+      color: #d7e4dd;
+      font-family: var(--mono);
+      font-size: 8px;
+    }
+
+    .share-row input:focus { border-color: #9ccbb6; }
+
+    .copy-link-btn {
+      flex: 0 0 auto;
+      min-height: 34px;
+      padding: 0 11px;
+      border: 1px solid rgba(255, 253, 247, 0.22);
+      border-radius: 8px;
+      color: var(--paper);
+      font-size: 10px;
+      font-weight: 650;
+      line-height: 1;
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+
+    .copy-link-btn:hover { background: var(--paper); color: var(--ink); }
+    .copy-link-btn.is-copied { background: #9ccbb6; border-color: #9ccbb6; color: var(--ink); }
+    .share-box small { display: block; margin-top: 6px; color: #91a79f; font-size: 8.5px; line-height: 1.5; }
+
+    /* ==========================================================
+       06. 记账表单
+       ========================================================== */
+    .workspace { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+
+    .entry-card { padding: clamp(20px, 3vw, 28px); }
+
+    .entry-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .entry-head .mono { color: var(--muted); }
+    .entry-head h2 {
+      margin-top: 5px;
+      font-family: var(--serif);
+      font-size: clamp(1.6rem, 2.6vw, 2rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+    }
+
+    .entry-head__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 8px;
+      line-height: 1.5;
+      white-space: nowrap;
+    }
+
+    .entry-head__badge::before { content: ""; width: 4px; height: 4px; border-radius: 50%; background: var(--accent); }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 13px;
+      padding-top: 15px;
+    }
+
+    .field { min-width: 0; }
+    .field--full { grid-column: 1 / -1; }
+    .field__label {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 6px;
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 750;
+      line-height: 1.5;
+    }
+    .field__label span {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 7px;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+    }
+
+    .text-input,
+    .date-input,
+    .money-field {
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: rgba(255, 253, 247, 0.7);
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+
+    .text-input:focus,
+    .date-input:focus,
+    .money-field:focus-within {
+      border-color: var(--ink);
+      background: var(--paper);
+      box-shadow: 0 0 0 3px rgba(47, 102, 87, 0.08);
+      outline: 0;
+    }
+
+    .text-input,
+    .date-input {
+      width: 100%;
+      height: 43px;
+      padding: 0 11px;
+      color: var(--ink);
+      font-size: 13px;
+    }
+
+    .text-input::placeholder { color: #aca496; }
+
+    .money-field { display: flex; align-items: center; gap: 5px; height: 43px; padding: 0 10px; }
+    .money-field span { color: var(--muted); font-family: var(--serif); font-size: 16px; line-height: 1; }
+    .money-field input {
+      width: 100%;
+      min-width: 0;
+      height: 100%;
+      padding: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      appearance: none;
+    }
+
+    .field.has-error .text-input,
+    .field.has-error .money-field { border-color: var(--danger); background: var(--danger-soft); }
+
+    .field .field-error { min-height: 16px; padding-top: 3px; font-size: 10px; }
+
+    .category-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .category-chips label { position: relative; cursor: pointer; }
+    .category-chips input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+    .category-chips span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 32px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1;
+      background: rgba(255, 253, 247, 0.55);
+      transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+    }
+
+    .category-chips span::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--cat-color, var(--muted));
+    }
+
+    .category-chips input:checked + span {
+      border-color: var(--cat-color, var(--ink));
+      background: var(--cat-color, var(--ink));
+      color: var(--paper);
+      transform: translateY(-1px);
+    }
+
+    .category-chips input:focus-visible + span { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+    .form-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .submit-btn {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: var(--paper);
+      font-size: 12px;
+      font-weight: 750;
+      line-height: 1;
+      box-shadow: 0 8px 20px rgba(47, 102, 87, 0.15);
+      transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .submit-btn:hover { background: var(--accent-deep); transform: translateY(-2px); box-shadow: 0 12px 26px rgba(47, 102, 87, 0.2); }
+    .submit-btn svg { width: 14px; height: 14px; }
+
+    .reset-btn {
+      min-height: 44px;
+      padding: 0 14px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      color: var(--ink-2);
+      font-size: 11px;
+      font-weight: 650;
+      line-height: 1;
+      transition: background 0.25s ease, border-color 0.25s ease;
+    }
+    .reset-btn:hover { background: var(--paper-2); border-color: var(--ink); }
+
+    .form-note { margin-top: 9px; color: var(--muted); font-size: 9.5px; line-height: 1.6; }
+
+    /* ==========================================================
+       07. 明细
+       ========================================================== */
+    .records { overflow: hidden; }
+
+    .records__head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 20px 22px 15px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .records__head .mono { color: var(--muted); }
+    .records__head h2 {
+      margin-top: 4px;
+      font-family: var(--serif);
+      font-size: 23px;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+    .records__head h2 span { color: var(--muted); font-family: var(--mono); font-size: 10px; font-weight: 400; }
+
+    .clear-btn {
+      flex: 0 0 auto;
+      min-height: 32px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 9.5px;
+      line-height: 1;
+      transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .clear-btn:hover:not(:disabled) { border-color: var(--danger); color: var(--danger); background: var(--danger-soft); }
+    .clear-btn:disabled { cursor: not-allowed; opacity: 0.38; }
+
+    .record-list { max-height: 510px; overflow-y: auto; }
+
+    .record {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 10px;
+      align-items: center;
+      padding: 13px 22px;
+      border-bottom: 1px solid var(--line);
+      animation: recordIn 0.35s ease both;
+    }
+
+    .record:last-child { border-bottom: 0; }
+    .record:hover { background: rgba(233, 226, 212, 0.25); }
+
+    @keyframes recordIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .record__main { min-width: 0; }
+    .record__title { display: flex; align-items: center; gap: 7px; min-width: 0; }
+    .record__title strong {
+      overflow: hidden;
+      color: var(--ink);
+      font-size: 12.5px;
+      font-weight: 750;
+      line-height: 1.5;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .record__meta { display: flex; align-items: center; gap: 8px; margin-top: 3px; color: var(--muted); font-size: 9px; line-height: 1.4; }
+
+    .cat-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--cat-soft, var(--paper-2));
+      color: var(--cat-color, var(--ink-2));
+      font-size: 9px;
+      line-height: 1.5;
+      white-space: nowrap;
+    }
+    .cat-badge::before { content: ""; width: 4px; height: 4px; border-radius: 50%; background: var(--cat-color, var(--muted)); }
+
+    .record__amount {
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.3;
+      white-space: nowrap;
+    }
+
+    .record__delete {
+      display: grid;
+      width: 27px;
+      height: 27px;
+      place-items: center;
+      border: 1px solid transparent;
+      border-radius: 50%;
+      color: #a6afa9;
+      font-size: 16px;
+      line-height: 1;
+      transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    }
+    .record__delete:hover { border-color: var(--danger); background: var(--danger-soft); color: var(--danger); }
+
+    .records-empty {
+      display: grid;
+      min-height: 170px;
+      place-items: center;
+      padding: 28px;
+      color: var(--muted);
+      text-align: center;
+    }
+    .records-empty strong { display: block; margin-bottom: 4px; color: var(--ink-2); font-family: var(--serif); font-size: 19px; font-weight: 700; }
+    .records-empty p { font-size: 10.5px; line-height: 1.6; }
+
+    /* ==========================================================
+       08. 说明 / 页脚 / 弹窗 / Toast
+       ========================================================== */
+    .why { padding: clamp(50px, 6vw, 76px) 0 clamp(54px, 7vw, 80px); border-top: 1px solid var(--line); background: rgba(255, 253, 247, 0.22); }
+    .why__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
+    .why h2 { margin: 11px 0 10px; font-family: var(--serif); font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 700; letter-spacing: -0.045em; line-height: 1.12; }
+    .why p { color: var(--ink-2); font-size: 12.5px; line-height: 1.9; }
+    .why p + p { margin-top: 9px; }
+    .why p strong { color: var(--ink); }
+
+    .why-list { display: grid; gap: 8px; }
+    .why-item { display: flex; gap: 10px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255, 253, 247, 0.55); }
+    .why-item b { display: grid; width: 22px; height: 22px; flex: 0 0 22px; place-items: center; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-family: var(--mono); font-size: 8px; }
+    .why-item span { color: var(--muted); font-size: 10.5px; line-height: 1.65; }
+    .why-item span strong { color: var(--ink-2); }
+
+    .site-footer { padding: 24px 0 30px; border-top: 1px solid var(--line); }
+    .footer__inner { display: flex; align-items: center; justify-content: space-between; gap: 15px; flex-wrap: wrap; color: var(--muted); font-size: 9.5px; line-height: 1.6; }
+    .footer__inner strong { color: var(--ink-2); font-weight: 700; }
+    .footer__meta { display: flex; gap: 10px; font-family: var(--mono); font-size: 7.5px; letter-spacing: 0.05em; }
+
+    .toast {
+      position: fixed;
+      right: 16px;
+      bottom: max(20px, env(safe-area-inset-bottom));
+      left: 16px;
+      z-index: 250;
+      width: fit-content;
+      max-width: min(440px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 10px 15px;
+      border-radius: 11px;
+      background: var(--ink);
+      color: var(--paper);
+      box-shadow: 0 14px 38px rgba(29, 43, 50, 0.24);
+      font-size: 12px;
+      line-height: 1.5;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .toast.is-visible { opacity: 1; transform: translateY(0); }
+    .toast.is-error { background: var(--danger); }
+    .toast.is-success { background: var(--accent-deep); }
+
+    .modal { position: fixed; inset: 0; z-index: 300; display: grid; place-items: center; padding: 18px; }
+    .modal__backdrop { position: absolute; inset: 0; background: rgba(20, 29, 32, 0.55); backdrop-filter: blur(3px); }
+    .modal__panel {
+      position: relative;
+      z-index: 1;
+      width: min(410px, 100%);
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--paper);
+      box-shadow: 0 28px 80px rgba(20, 29, 32, 0.28);
+      animation: modalIn 0.25s ease both;
+    }
+
+    @keyframes modalIn { from { opacity: 0; transform: translateY(8px) scale(0.98); } to { opacity: 1; transform: none; } }
+
+    .modal__icon { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; background: var(--danger-soft); color: var(--danger); font-family: var(--mono); font-size: 16px; font-weight: 700; }
+    .modal__panel h3 { margin: 13px 0 6px; font-family: var(--serif); font-size: 24px; font-weight: 700; line-height: 1.25; }
+    .modal__panel p { color: var(--muted); font-size: 11.5px; line-height: 1.7; }
+    .modal__actions { display: flex; justify-content: flex-end; gap: 7px; margin-top: 19px; }
+    .modal__cancel { min-height: 40px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; color: var(--ink-2); font-size: 11px; font-weight: 650; }
+    .modal__danger { min-height: 40px; padding: 0 15px; border-radius: 999px; background: var(--danger); color: var(--paper); font-size: 11px; font-weight: 750; }
+    .modal__danger:hover { background: var(--danger-deep); }
+    .modal__save { min-height: 40px; padding: 0 16px; border-radius: 999px; background: var(--ink); color: var(--paper); font-size: 11px; font-weight: 750; }
+
+    /* ==========================================================
+       09. 响应式
+       ========================================================== */
+    @media (max-width: 960px) {
+      .setup__grid, .dash-grid { grid-template-columns: 1fr; }
+      .summary { position: relative; top: auto; }
+      .why__grid { grid-template-columns: 1fr; gap: 18px; }
+    }
+
+    @media (max-width: 680px) {
+      .container { width: calc(100% - 30px); }
+      .header__tag { display: none; }
+      .hero { padding-top: 34px; }
+      .hero h1 { font-size: clamp(2.7rem, 11.5vw, 3.8rem); }
+      body.is-ready .hero h1 { font-size: clamp(2.05rem, 8.2vw, 2.7rem); }
+      body.is-ready .hero h1 br { display: block; }
+      .setup__grid { gap: 12px; }
+      .setup-card { padding: 21px; border-radius: 19px; }
+      .setup-card h2 { font-size: clamp(1.9rem, 8vw, 2.6rem); }
+      .setup-side { flex-direction: column; }
+      .rule-preview, .setup-steps { border-radius: 16px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .field--full { grid-column: auto; }
+      .summary { padding: 19px; border-radius: 17px; }
+      .entry-card { padding: 18px; border-radius: 17px; }
+      .records { border-radius: 17px; }
+      .records__head { padding: 17px 17px 13px; }
+      .record { padding: 12px 17px; }
+      .record__amount { font-size: 16px; }
+      .footer__inner { display: block; }
+      .footer__meta { margin-top: 7px; }
+    }
+
+    @media (max-width: 460px) {
+      .container { width: calc(100% - 24px); }
+      .brand__name { font-size: 17px; }
+      .header__actions .ghost-btn { padding: 0 10px; font-size: 10px; }
+      .hero h1 { font-size: clamp(2.5rem, 11.5vw, 3.2rem); }
+      body.is-ready .hero h1 { font-size: clamp(2rem, 8.2vw, 2.55rem); }
+      .hero__lead { font-size: 12.5px; }
+      .setup-card { padding: 17px; }
+      .money-input { min-height: 61px; }
+      .money-input input { font-size: 30px; }
+      .summary__total { font-size: clamp(2.5rem, 12vw, 3.5rem); }
+      .summary__stats strong { font-size: 19px; }
+      .entry-head__badge { display: none; }
+      .category-chips span { min-height: 31px; padding: 0 9px; font-size: 10px; }
+      .record { grid-template-columns: minmax(0, 1fr) auto auto; gap: 7px; }
+      .record__title strong { font-size: 12px; }
+      .record__meta { gap: 5px; }
+      .record__amount { font-size: 15px; }
+      .record__delete { width: 24px; height: 24px; }
+      .why { padding-top: 42px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body id="top">
+  <header class="site-header">
+    <div class="container header__inner">
+      <a class="brand" href="#top" aria-label="班费簿，回到顶部">
+        <span class="brand__mark" aria-hidden="true">班</span>
+        <span class="brand__text">
+          <span class="brand__name">班费簿</span>
+          <span class="brand__sub">CLASS FUND LEDGER / 2026</span>
+        </span>
+      </a>
+      <div class="header__actions">
+        <span class="header__tag">每一笔，都有去处</span>
+        <button class="ghost-btn" type="button" id="copy-top">
+          复制分享链接
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6.5 9.5 9.5 6.5M7 4.5l1-1a3 3 0 0 1 4.2 4.2l-1 1M9 11.5l-1 1a3 3 0 0 1-4.2-4.2l1-1"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <p class="eyebrow">CLASS FUND / 班费管理</p>
+        <h1 id="hero-title">每一笔班费，<br><em>都要花得明白。</em></h1>
+        <p class="hero__lead">
+          先设本学期班费总额，之后每记一笔支出，系统自动算<strong>已花</strong>与<strong>剩余</strong>；剩余低于 <strong>20%</strong> 时，会亮红灯提醒。
+        </p>
+        <div class="hero__meta" aria-label="功能要点">
+          <span class="meta-pill">分类记账</span>
+          <span class="meta-pill">20% 预警线</span>
+          <span class="meta-pill">清空前确认</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 首次设置 -->
+    <section class="setup" id="setup" aria-labelledby="setup-title">
+      <div class="container setup__grid">
+        <div class="setup-card">
+          <p class="eyebrow">SETUP / 先定总额</p>
+          <h2 id="setup-title">这学期，<br>班费一共多少？</h2>
+          <p>先设一个总预算，再开始记账。之后每次支出都会从这笔总额里扣，剩余多少一目了然。</p>
+
+          <form class="setup-form" id="setup-form" novalidate>
+            <div class="setup-field">
+              <div class="setup-label">
+                <label for="setup-budget">本学期班费总额</label>
+                <span>SEMESTER BUDGET</span>
+              </div>
+              <div class="money-input">
+                <span class="currency" aria-hidden="true">¥</span>
+                <input id="setup-budget" type="text" inputmode="decimal" maxlength="12" placeholder="2000" autocomplete="off" spellcheck="false" aria-describedby="setup-error">
+              </div>
+              <p class="field-error" id="setup-error" role="alert"></p>
+              <div class="quick-picks" aria-label="快速填入金额">
+                <button class="quick-pick" type="button" data-amount="1000">¥1,000</button>
+                <button class="quick-pick" type="button" data-amount="2000">¥2,000</button>
+                <button class="quick-pick" type="button" data-amount="3000">¥3,000</button>
+                <button class="quick-pick" type="button" data-amount="5000">¥5,000</button>
+              </div>
+            </div>
+            <button class="primary-btn setup-submit" type="submit">
+              开始记账
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 8h10M9 4l4 4-4 4"/>
+              </svg>
+            </button>
+          </form>
+
+          <p class="privacy-note">记录只保存在当前浏览器，不会上传到服务器；分享链接只分享工具，不包含你的明细。</p>
+        </div>
+
+        <aside class="setup-side" aria-label="规则说明">
+          <div class="rule-preview">
+            <span class="mono">WARNING LINE / 预警线</span>
+            <h3>剩余低于<br>总班费的</h3>
+            <strong>20%</strong>
+            <p>留出至少五分之一做机动金：临时补买、退费、车费都不至于临时抓瞎。低于这条线，系统会变色提醒。</p>
+          </div>
+          <div class="setup-steps">
+            <span class="mono">HOW IT WORKS / 三步</span>
+            <ol>
+              <li>设置本学期班费总额</li>
+              <li>逐笔记下支出与分类</li>
+              <li>随时看剩余，接近预警线会提醒</li>
+            </ol>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 记账主界面 -->
+    <section class="dashboard" id="dashboard" hidden aria-labelledby="dashboard-title">
+      <div class="container">
+        <h2 class="sr-only" id="dashboard-title">班费总览与支出记录</h2>
+        <div class="dash-grid">
+          <aside class="summary card" id="summary" aria-label="班费总览">
+            <div class="summary__top">
+              <span class="mono">OVERVIEW / 总览</span>
+              <button class="text-btn" type="button" id="edit-budget">修改总额</button>
+            </div>
+            <p class="summary__label">本学期班费</p>
+            <p class="summary__total" id="total">¥0</p>
+
+            <div class="summary__stats">
+              <div><span>已花</span><strong id="spent">¥0</strong></div>
+              <div><span>剩余</span><strong id="remaining">¥0</strong></div>
+            </div>
+
+            <div class="ratio-line">
+              <span id="ratio-text">已花 0% · 剩余 100%</span>
+              <span>预警线 20%</span>
+            </div>
+            <div class="progress" id="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="班费已花比例">
+              <span class="progress__fill" id="progress-fill"></span>
+              <i class="progress__marker" aria-hidden="true"></i>
+            </div>
+
+            <div class="health" id="health">
+              <span aria-hidden="true"></span>
+              <div><strong>余量正常</strong><small>还在 20% 预警线以上</small></div>
+            </div>
+
+            <div class="alert" id="alert" role="alert" hidden>
+              <span class="alert__icon" aria-hidden="true">!</span>
+              <div><strong id="alert-title">班费告急</strong><p id="alert-text"></p></div>
+            </div>
+
+            <div class="subsection-label"><span>CATEGORY / 分类支出</span><span id="breakdown-count">0 类</span></div>
+            <div class="breakdown-list" id="breakdown-list"></div>
+
+            <div class="share-box">
+              <label for="share-url">分享链接 / SHARE</label>
+              <div class="share-row">
+                <input id="share-url" type="text" readonly aria-label="当前页面分享链接">
+                <button class="copy-link-btn" type="button" id="copy-share">复制</button>
+              </div>
+              <small>复制页面链接给同学；记录只存在你的浏览器里。</small>
+            </div>
+          </aside>
+
+          <div class="workspace">
+            <form class="card entry-card" id="expense-form" novalidate>
+              <div class="entry-head">
+                <div>
+                  <span class="mono">NEW EXPENSE / 记一笔</span>
+                  <h2>这笔钱，花在哪？</h2>
+                </div>
+                <span class="entry-head__badge">自动算剩余</span>
+              </div>
+
+              <div class="form-grid">
+                <div class="field field--full" data-field="item">
+                  <div class="field__label"><label for="item">支出项目</label><span>ITEM</span></div>
+                  <input class="text-input" id="item" name="item" type="text" maxlength="40" placeholder="如：运动会横幅、场地押金" autocomplete="off" aria-describedby="item-error">
+                  <p class="field-error" id="item-error" role="alert"></p>
+                </div>
+
+                <div class="field" data-field="amount">
+                  <div class="field__label"><label for="amount">金额</label><span>AMOUNT</span></div>
+                  <div class="money-field">
+                    <span aria-hidden="true">¥</span>
+                    <input id="amount" name="amount" type="text" inputmode="decimal" maxlength="12" placeholder="0.00" autocomplete="off" spellcheck="false" aria-describedby="amount-error">
+                  </div>
+                  <p class="field-error" id="amount-error" role="alert"></p>
+                </div>
+
+                <div class="field" data-field="date">
+                  <div class="field__label"><label for="date">日期</label><span>DATE</span></div>
+                  <input class="date-input" id="date" name="date" type="date">
+                  <p class="field-error" id="date-error" role="alert"></p>
+                </div>
+
+                <div class="field field--full" data-field="category">
+                  <div class="field__label"><span>分类</span><span>CATEGORY</span></div>
+                  <div class="category-chips" role="radiogroup" aria-label="支出分类">
+                    <label style="--cat-color:#3d6d8e;--cat-soft:#e4eef4"><input type="radio" name="category" value="场地" checked><span>场地</span></label>
+                    <label style="--cat-color:#a56b1f;--cat-soft:#f7edd8"><input type="radio" name="category" value="物料"><span>物料</span></label>
+                    <label style="--cat-color:#79557c;--cat-soft:#efe6f0"><input type="radio" name="category" value="奖品"><span>奖品</span></label>
+                    <label style="--cat-color:#b86a3f;--cat-soft:#f8e7dd"><input type="radio" name="category" value="餐饮"><span>餐饮</span></label>
+                    <label style="--cat-color:#2f6657;--cat-soft:#e2eee8"><input type="radio" name="category" value="交通"><span>交通</span></label>
+                    <label style="--cat-color:#6f7d7b;--cat-soft:#ece7dc"><input type="radio" name="category" value="其他"><span>其他</span></label>
+                  </div>
+                  <p class="field-error" id="category-error" role="alert"></p>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button class="submit-btn" type="submit">
+                  记一笔支出
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M8 3v10M3 8h10"/>
+                  </svg>
+                </button>
+                <button class="reset-btn" type="reset">清空表单</button>
+              </div>
+              <p class="form-note">金额填错（空值、汉字、负数）会被拦下；正常输入直接记入明细。</p>
+            </form>
+
+            <section class="card records" aria-labelledby="records-title">
+              <div class="records__head">
+                <div>
+                  <span class="mono">LEDGER / 明细</span>
+                  <h2 id="records-title">支出记录 <span id="record-count">0 笔</span></h2>
+                </div>
+                <button class="clear-btn" type="button" id="clear-btn" disabled>清空全部</button>
+              </div>
+              <ul class="record-list" id="record-list"></ul>
+              <div class="records-empty" id="records-empty">
+                <div>
+                  <strong>还没有支出记录</strong>
+                  <p>记下第一笔，剩余班费会自动更新。</p>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 预警线说明 -->
+    <section class="why" aria-labelledby="why-title">
+      <div class="container why__grid">
+        <div>
+          <span class="mono">WHY 20% / 规则说明</span>
+          <h2 id="why-title">为什么预警线是 20%？</h2>
+          <p>班费不是日常零花钱。活动前经常会有临时补买、退费、车费、打印费，留出<strong>至少五分之一</strong>做机动金，比事后临时收钱更从容。</p>
+          <p>低于这条线时，系统会把总览卡变红，并用一句人话告诉你先停什么、先保什么；刚好 20% 还不算告急，严格低于 20% 才亮红灯。</p>
+        </div>
+        <div class="why-list">
+          <div class="why-item"><b>01</b><span><strong>先保尾款：</strong>场地、物料这类已经承诺的支出优先，奖品和聚餐往后放。</span></div>
+          <div class="why-item"><b>02</b><span><strong>留出机动金：</strong>临时补买、退费、交通都可能发生，20% 是给意外留的缓冲。</span></div>
+          <div class="why-item"><b>03</b><span><strong>不是会计系统：</strong>它只帮你把“还剩多少”看清，不替代班委的共同确认。</span></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <span><strong>班费簿</strong> · 每一笔班费，都要花得明白。</span>
+      <span class="footer__meta"><span>LOCAL FIRST</span><span>20% WARNING</span><span>CLASS FUND / 2026</span></span>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- 清空确认 -->
+  <div class="modal" id="clear-modal" hidden>
+    <div class="modal__backdrop" data-close="clear"></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="clear-title" aria-describedby="clear-desc">
+      <span class="modal__icon" aria-hidden="true">!</span>
+      <h3 id="clear-title">清空全部支出记录？</h3>
+      <p id="clear-desc">所有明细会被删除，本学期班费总额会保留。这个操作不可撤销。</p>
+      <div class="modal__actions">
+        <button class="modal__cancel" type="button" id="cancel-clear">先不清空</button>
+        <button class="modal__danger" type="button" id="confirm-clear">确认清空</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 修改总额 -->
+  <div class="modal" id="budget-modal" hidden>
+    <div class="modal__backdrop" data-close="budget"></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="budget-title">
+      <span class="modal__icon" style="background:var(--accent-soft);color:var(--accent)" aria-hidden="true">¥</span>
+      <h3 id="budget-title">修改本学期班费总额</h3>
+      <p>修改后，已花和剩余会按新总额重新计算。</p>
+      <div class="setup-field" style="margin-top:14px">
+        <div class="money-input" style="min-height:55px;padding:6px 11px">
+          <span class="currency" aria-hidden="true">¥</span>
+          <input id="budget-input" type="text" inputmode="decimal" maxlength="12" autocomplete="off" spellcheck="false" aria-label="新的班费总额">
+        </div>
+        <p class="field-error" id="budget-error" role="alert"></p>
+      </div>
+      <div class="modal__actions">
+        <button class="modal__cancel" type="button" id="cancel-budget">取消</button>
+        <button class="modal__save" type="button" id="save-budget">保存总额</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var STORAGE_BUDGET = 'classFundBudgetV1';
+      var STORAGE_RECORDS = 'classFundRecordsV1';
+      var THRESHOLD = 0.2;
+      var MAX_AMOUNT = 1000000;
+
+      var setupSection = document.getElementById('setup');
+      var dashboard = document.getElementById('dashboard');
+      var setupForm = document.getElementById('setup-form');
+      var setupBudget = document.getElementById('setup-budget');
+      var setupError = document.getElementById('setup-error');
+      var totalEl = document.getElementById('total');
+      var spentEl = document.getElementById('spent');
+      var remainingEl = document.getElementById('remaining');
+      var ratioText = document.getElementById('ratio-text');
+      var progress = document.getElementById('progress');
+      var progressFill = document.getElementById('progress-fill');
+      var health = document.getElementById('health');
+      var alertBox = document.getElementById('alert');
+      var alertTitle = document.getElementById('alert-title');
+      var alertText = document.getElementById('alert-text');
+      var summary = document.getElementById('summary');
+      var breakdownList = document.getElementById('breakdown-list');
+      var breakdownCount = document.getElementById('breakdown-count');
+      var expenseForm = document.getElementById('expense-form');
+      var itemInput = document.getElementById('item');
+      var amountInput = document.getElementById('amount');
+      var dateInput = document.getElementById('date');
+      var categoryInputs = Array.prototype.slice.call(document.querySelectorAll('input[name="category"]'));
+      var itemField = document.querySelector('[data-field="item"]');
+      var amountField = document.querySelector('[data-field="amount"]');
+      var categoryField = document.querySelector('[data-field="category"]');
+      var itemError = document.getElementById('item-error');
+      var amountError = document.getElementById('amount-error');
+      var categoryError = document.getElementById('category-error');
+      var recordList = document.getElementById('record-list');
+      var recordsEmpty = document.getElementById('records-empty');
+      var recordCount = document.getElementById('record-count');
+      var clearBtn = document.getElementById('clear-btn');
+      var clearModal = document.getElementById('clear-modal');
+      var cancelClear = document.getElementById('cancel-clear');
+      var confirmClear = document.getElementById('confirm-clear');
+      var budgetModal = document.getElementById('budget-modal');
+      var budgetInput = document.getElementById('budget-input');
+      var budgetError = document.getElementById('budget-error');
+      var editBudgetBtn = document.getElementById('edit-budget');
+      var cancelBudget = document.getElementById('cancel-budget');
+      var saveBudgetBtn = document.getElementById('save-budget');
+      var shareUrl = document.getElementById('share-url');
+      var copyShare = document.getElementById('copy-share');
+      var copyTop = document.getElementById('copy-top');
+      var toast = document.getElementById('toast');
+
+      var state = {
+        budget: loadBudget(),
+        records: loadRecords(),
+        toastTimer: null
+      };
+
+      var CATEGORY_COLORS = {
+        '场地': { color: '#3d6d8e', soft: '#e4eef4' },
+        '物料': { color: '#a56b1f', soft: '#f7edd8' },
+        '奖品': { color: '#79557c', soft: '#efe6f0' },
+        '餐饮': { color: '#b86a3f', soft: '#f8e7dd' },
+        '交通': { color: '#2f6657', soft: '#e2eee8' },
+        '其他': { color: '#6f7d7b', soft: '#ece7dc' }
+      };
+
+      function safeGet(key) {
+        try { return window.localStorage.getItem(key); } catch (error) { return null; }
+      }
+
+      function safeSet(key, value) {
+        try { window.localStorage.setItem(key, value); } catch (error) {}
+      }
+
+      function safeRemove(key) {
+        try { window.localStorage.removeItem(key); } catch (error) {}
+      }
+
+      function loadBudget() {
+        var raw = safeGet(STORAGE_BUDGET);
+        var value = Number(raw);
+        return Number.isFinite(value) && value > 0 ? value : 0;
+      }
+
+      function loadRecords() {
+        var raw = safeGet(STORAGE_RECORDS);
+        if (!raw) return [];
+        try {
+          var list = JSON.parse(raw);
+          if (!Array.isArray(list)) return [];
+          return list.filter(function (item) {
+            return item && typeof item.item === 'string' && Number.isFinite(Number(item.amount));
+          }).map(function (item) {
+            return {
+              id: String(item.id || (Date.now() + Math.random())),
+              item: item.item,
+              amount: Number(item.amount),
+              category: CATEGORY_COLORS[item.category] ? item.category : '其他',
+              date: item.date || today(),
+              createdAt: Number(item.createdAt) || Date.now()
+            };
+          });
+        } catch (error) {
+          return [];
+        }
+      }
+
+      function saveBudget() { safeSet(STORAGE_BUDGET, String(state.budget)); }
+      function saveRecords() { safeSet(STORAGE_RECORDS, JSON.stringify(state.records)); }
+
+      function today() {
+        var now = new Date();
+        var y = now.getFullYear();
+        var m = String(now.getMonth() + 1).padStart(2, '0');
+        var d = String(now.getDate()).padStart(2, '0');
+        return y + '-' + m + '-' + d;
+      }
+
+      function money(value) {
+        var sign = value < 0 ? '-' : '';
+        return sign + '¥' + Math.abs(value).toLocaleString('zh-CN', {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2
+        });
+      }
+
+      function percent(value) {
+        var n = Math.round(value * 1000) / 10;
+        return (Number.isInteger(n) ? n.toFixed(0) : n.toFixed(1)) + '%';
+      }
+
+      function parseAmount(raw) {
+        var text = String(raw || '').trim();
+        if (!text) return { message: '请输入正确数字' };
+        if (text.charAt(0) === '-') return { message: '金额不能为负数' };
+        if (!/^(?:\d+(?:\.\d{1,2})?|\.\d{1,2})$/.test(text)) {
+          if (/^\d+\.\d{3,}$/.test(text)) return { message: '最多输入两位小数' };
+          return { message: '请输入正确数字' };
+        }
+        var value = Number(text);
+        if (!Number.isFinite(value)) return { message: '请输入正确数字' };
+        if (value > MAX_AMOUNT) return { message: '金额超出合理范围' };
+        return { value: Math.round(value * 100) / 100 };
+      }
+
+      function showToast(message, tone) {
+        if (!toast) return;
+        toast.textContent = message;
+        toast.classList.remove('is-error', 'is-success');
+        if (tone === 'error') toast.classList.add('is-error');
+        if (tone === 'success') toast.classList.add('is-success');
+        toast.classList.add('is-visible');
+        window.clearTimeout(state.toastTimer);
+        state.toastTimer = window.setTimeout(function () {
+          toast.classList.remove('is-visible');
+        }, 2800);
+      }
+
+      function setError(field, errorEl, message) {
+        field.classList.toggle('has-error', Boolean(message));
+        if (errorEl) errorEl.textContent = message || '';
+        var input = field.querySelector('input');
+        if (input) input.setAttribute('aria-invalid', message ? 'true' : 'false');
+      }
+
+      function clearFormErrors() {
+        setError(itemField, itemError, '');
+        setError(amountField, amountError, '');
+        setError(categoryField, categoryError, '');
+      }
+
+      function spentTotal() {
+        return state.records.reduce(function (sum, record) { return sum + record.amount; }, 0);
+      }
+
+      function renderSummary() {
+        var spent = Math.round(spentTotal() * 100) / 100;
+        var remaining = Math.round((state.budget - spent) * 100) / 100;
+        var ratio = state.budget > 0 ? remaining / state.budget : 0;
+        var spentRatio = state.budget > 0 ? spent / state.budget : 0;
+        var warning = ratio < THRESHOLD;
+        var overspent = remaining < 0;
+
+        totalEl.textContent = money(state.budget);
+        spentEl.textContent = money(spent);
+        remainingEl.textContent = money(remaining);
+        remainingEl.classList.toggle('is-low', warning);
+        ratioText.textContent = '已花 ' + percent(spentRatio) + ' · 剩余 ' + percent(ratio);
+
+        var fill = Math.max(0, Math.min(100, spentRatio * 100));
+        progressFill.style.width = fill.toFixed(2) + '%';
+        progress.setAttribute('aria-valuenow', String(Math.round(fill)));
+        progress.classList.toggle('is-warning', warning);
+        summary.classList.toggle('is-warning', warning);
+
+        health.hidden = warning;
+        alertBox.hidden = !warning;
+
+        if (warning) {
+          var title = overspent ? '班费已经超支' : '班费告急';
+          var message = overspent
+            ? '已经超支 ' + money(-remaining) + '。先把账补齐，再谈下一笔支出。'
+            : '只剩 ' + percent(ratio) + '。先保场地和物料尾款，奖品、聚餐往后放。';
+          alertTitle.textContent = title;
+          alertText.textContent = message;
+        }
+
+        renderBreakdown();
+      }
+
+      function renderBreakdown() {
+        var totals = {};
+        state.records.forEach(function (record) {
+          totals[record.category] = (totals[record.category] || 0) + record.amount;
+        });
+        var entries = Object.keys(totals).sort(function (a, b) { return totals[b] - totals[a]; });
+        breakdownCount.textContent = entries.length + ' 类';
+        breakdownList.innerHTML = '';
+        if (!entries.length) {
+          var empty = document.createElement('span');
+          empty.className = 'breakdown-empty';
+          empty.textContent = '还没有分类支出';
+          breakdownList.appendChild(empty);
+          return;
+        }
+        entries.forEach(function (category) {
+          var colors = CATEGORY_COLORS[category] || CATEGORY_COLORS['其他'];
+          var chip = document.createElement('span');
+          chip.className = 'breakdown-chip';
+          chip.style.setProperty('--cat-color', colors.color);
+          var dot = document.createElement('i');
+          dot.setAttribute('aria-hidden', 'true');
+          var name = document.createElement('span');
+          name.textContent = category;
+          var amount = document.createElement('b');
+          amount.textContent = money(totals[category]);
+          chip.appendChild(dot);
+          chip.appendChild(name);
+          chip.appendChild(amount);
+          breakdownList.appendChild(chip);
+        });
+      }
+
+      function renderRecords() {
+        recordList.innerHTML = '';
+        recordCount.textContent = state.records.length + ' 笔';
+        clearBtn.disabled = state.records.length === 0;
+        recordsEmpty.hidden = state.records.length !== 0;
+
+        state.records.slice().sort(function (a, b) { return b.createdAt - a.createdAt; }).forEach(function (record) {
+          var li = document.createElement('li');
+          li.className = 'record';
+
+          var main = document.createElement('div');
+          main.className = 'record__main';
+          var title = document.createElement('div');
+          title.className = 'record__title';
+          var strong = document.createElement('strong');
+          strong.textContent = record.item;
+          title.appendChild(strong);
+
+          var meta = document.createElement('div');
+          meta.className = 'record__meta';
+          var badge = document.createElement('span');
+          var colors = CATEGORY_COLORS[record.category] || CATEGORY_COLORS['其他'];
+          badge.className = 'cat-badge';
+          badge.style.setProperty('--cat-color', colors.color);
+          badge.style.setProperty('--cat-soft', colors.soft);
+          badge.textContent = record.category;
+          var date = document.createElement('span');
+          date.textContent = record.date;
+          meta.appendChild(badge);
+          meta.appendChild(date);
+          main.appendChild(title);
+          main.appendChild(meta);
+
+          var amount = document.createElement('strong');
+          amount.className = 'record__amount';
+          amount.textContent = '-' + money(record.amount);
+
+          var del = document.createElement('button');
+          del.className = 'record__delete';
+          del.type = 'button';
+          del.setAttribute('aria-label', '删除这笔记录：' + record.item);
+          del.textContent = '×';
+          del.addEventListener('click', function () {
+            deleteRecord(record.id);
+          });
+
+          li.appendChild(main);
+          li.appendChild(amount);
+          li.appendChild(del);
+          recordList.appendChild(li);
+        });
+      }
+
+      function renderAll() {
+        renderSummary();
+        renderRecords();
+      }
+
+      function showDashboard() {
+        document.body.classList.add('is-ready');
+        setupSection.hidden = true;
+        dashboard.hidden = false;
+        shareUrl.value = location.href.split('#')[0];
+        renderAll();
+      }
+
+      function showSetup() {
+        document.body.classList.remove('is-ready');
+        setupSection.hidden = false;
+        dashboard.hidden = true;
+        setupBudget.focus();
+      }
+
+      function setSetupError(message) {
+        setupError.textContent = message || '';
+        setupBudget.setAttribute('aria-invalid', message ? 'true' : 'false');
+        if (message) showToast(message, 'error');
+      }
+
+      setupBudget.addEventListener('input', function () {
+        if (setupError.textContent) setSetupError('');
+      });
+
+      setupForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        var result = parseAmount(setupBudget.value);
+        if (result.message) {
+          setSetupError(result.message);
+          return;
+        }
+        if (result.value <= 0) {
+          setSetupError('班费总额必须大于 0');
+          return;
+        }
+        if (result.value < spentTotal()) {
+          setSetupError('总额不能小于已经花掉的 ' + money(spentTotal()));
+          return;
+        }
+        state.budget = result.value;
+        saveBudget();
+        setSetupError('');
+        showDashboard();
+        showToast('班费总额已设为 ' + money(state.budget), 'success');
+        amountInput.focus();
+      });
+
+      document.querySelectorAll('.quick-pick').forEach(function (button) {
+        button.addEventListener('click', function () {
+          setupBudget.value = button.dataset.amount;
+          setupBudget.focus();
+          setSetupError('');
+        });
+      });
+
+      function addRecord(event) {
+        event.preventDefault();
+        clearFormErrors();
+        var item = itemInput.value.trim();
+        var amountResult = parseAmount(amountInput.value);
+        var categoryInput = categoryInputs.filter(function (input) { return input.checked; })[0];
+        var firstInvalid = null;
+
+        if (!item) {
+          setError(itemField, itemError, '请填写支出项目');
+          firstInvalid = itemInput;
+        }
+
+        if (amountResult.message) {
+          setError(amountField, amountError, amountResult.message);
+          firstInvalid = firstInvalid || amountInput;
+        } else if (amountResult.value <= 0) {
+          setError(amountField, amountError, '金额必须大于 0');
+          firstInvalid = firstInvalid || amountInput;
+        }
+
+        if (!categoryInput) {
+          setError(categoryField, categoryError, '请选择一个分类');
+          firstInvalid = firstInvalid || categoryInputs[0];
+        }
+
+        if (firstInvalid) {
+          firstInvalid.focus();
+          var firstMessage = itemError.textContent || amountError.textContent || categoryError.textContent;
+          if (firstMessage) showToast(firstMessage, 'error');
+          return;
+        }
+
+        var record = {
+          id: String(Date.now()) + Math.random().toString(16).slice(2),
+          item: item,
+          amount: amountResult.value,
+          category: categoryInput.value,
+          date: dateInput.value || today(),
+          createdAt: Date.now()
+        };
+
+        state.records.push(record);
+        saveRecords();
+        renderAll();
+        itemInput.value = '';
+        amountInput.value = '';
+        clearFormErrors();
+        itemInput.focus();
+        showToast('已记一笔：' + money(record.amount), 'success');
+      }
+
+      expenseForm.addEventListener('submit', addRecord);
+
+      expenseForm.addEventListener('reset', function () {
+        window.setTimeout(function () {
+          clearFormErrors();
+          itemInput.focus();
+        }, 0);
+      });
+
+      [itemInput, amountInput].forEach(function (input) {
+        input.addEventListener('input', function () {
+          if (input === itemInput) setError(itemField, itemError, '');
+          if (input === amountInput) setError(amountField, amountError, '');
+        });
+      });
+
+      function deleteRecord(id) {
+        state.records = state.records.filter(function (record) { return record.id !== id; });
+        saveRecords();
+        renderAll();
+        showToast('已删除这笔记录');
+      }
+
+      function openModal(modal) {
+        modal.hidden = false;
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal(modal) {
+        modal.hidden = true;
+        document.body.style.overflow = '';
+      }
+
+      clearBtn.addEventListener('click', function () {
+        if (!state.records.length) return;
+        openModal(clearModal);
+        cancelClear.focus();
+      });
+
+      cancelClear.addEventListener('click', function () { closeModal(clearModal); });
+      clearModal.querySelector('[data-close="clear"]').addEventListener('click', function () { closeModal(clearModal); });
+
+      confirmClear.addEventListener('click', function () {
+        state.records = [];
+        saveRecords();
+        renderAll();
+        closeModal(clearModal);
+        showToast('已清空全部支出记录，班费总额保留', 'success');
+      });
+
+      editBudgetBtn.addEventListener('click', function () {
+        budgetInput.value = String(state.budget);
+        budgetError.textContent = '';
+        openModal(budgetModal);
+        budgetInput.focus();
+        budgetInput.select();
+      });
+
+      cancelBudget.addEventListener('click', function () { closeModal(budgetModal); });
+      budgetModal.querySelector('[data-close="budget"]').addEventListener('click', function () { closeModal(budgetModal); });
+
+      saveBudgetBtn.addEventListener('click', function () {
+        var result = parseAmount(budgetInput.value);
+        if (result.message) {
+          budgetError.textContent = result.message;
+          showToast(result.message, 'error');
+          return;
+        }
+        if (result.value <= 0) {
+          budgetError.textContent = '班费总额必须大于 0';
+          showToast('班费总额必须大于 0', 'error');
+          return;
+        }
+        if (result.value < spentTotal()) {
+          budgetError.textContent = '总额不能小于已经花掉的 ' + money(spentTotal());
+          showToast('总额不能小于已花金额', 'error');
+          return;
+        }
+        state.budget = result.value;
+        saveBudget();
+        renderAll();
+        closeModal(budgetModal);
+        showToast('班费总额已更新为 ' + money(state.budget), 'success');
+      });
+
+      document.addEventListener('keydown', function (event) {
+        if (event.key !== 'Escape') return;
+        if (!clearModal.hidden) closeModal(clearModal);
+        if (!budgetModal.hidden) closeModal(budgetModal);
+      });
+
+      function fallbackCopy(text) {
+        var area = document.createElement('textarea');
+        area.value = text;
+        area.setAttribute('readonly', '');
+        area.style.position = 'fixed';
+        area.style.top = '0';
+        area.style.left = '0';
+        area.style.opacity = '0.01';
+        document.body.appendChild(area);
+        area.focus();
+        area.select();
+        area.setSelectionRange(0, area.value.length);
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (error) { ok = false; }
+        area.remove();
+        return ok;
+      }
+
+      function copyLink(button) {
+        var link = shareUrl.value || location.href.split('#')[0];
+        var original = button.innerHTML;
+        var success = function () {
+          button.textContent = '已复制 ✓';
+          button.classList.add('is-copied');
+          showToast('分享链接已复制', 'success');
+          window.setTimeout(function () {
+            button.innerHTML = original;
+            button.classList.remove('is-copied');
+          }, 2200);
+        };
+        var fail = function () {
+          showToast('复制失败，请手动选择链接', 'error');
+          if (shareUrl) { shareUrl.focus(); shareUrl.select(); }
+        };
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+          navigator.clipboard.writeText(link).then(success).catch(function () {
+            if (fallbackCopy(link)) success(); else fail();
+          });
+        } else if (fallbackCopy(link)) {
+          success();
+        } else {
+          fail();
+        }
+      }
+
+      copyShare.addEventListener('click', function () { copyLink(copyShare); });
+      copyTop.addEventListener('click', function () { copyLink(copyTop); });
+
+      // 初始化
+      dateInput.value = today();
+      shareUrl.value = location.href.split('#')[0];
+
+      if (state.budget > 0) {
+        showDashboard();
+      } else {
+        showSetup();
+      }
+    })();
+  </script>
+</body>
+</html>
