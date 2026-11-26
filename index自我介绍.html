@@ -1,0 +1,3695 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>曹智强｜把大学生活运营成一条漂亮的供应链</title>
+  <meta name="description" content="曹智强的个人主页：扬州人，常州工业职业技术学院 26 供应链运营 331 班新生。正在学习、生活、专转本，把自己运营成一条漂亮的供应链。">
+  <meta name="theme-color" content="#f6f4ec">
+  <meta name="color-scheme" content="dark light">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="曹智强｜把大学生活运营成一条漂亮的供应链">
+  <meta property="og:description" content="扬州人，26 供应链运营 331 班新生。学习、生活、专转本，持续增值中。">
+  <meta property="og:locale" content="zh_CN">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23c9f752'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' font-family='Arial,sans-serif' font-weight='800' fill='%2307090c'%3EC%3C/text%3E%3C/svg%3E">
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('cao-site-theme-v2');
+        if (saved === 'light' || saved === 'dark') {
+          document.documentElement.setAttribute('data-theme', saved);
+        }
+      } catch (e) {}
+      document.documentElement.classList.add('js');
+    })();
+  </script>
+  <style>
+    /* ==========================================================
+       01. 设计变量：浅色默认，深色一键切换
+       ========================================================== */
+    :root {
+      --bg: #0b0f14;
+      --bg-soft: #10161d;
+      --surface: rgba(24, 31, 39, 0.76);
+      --surface-solid: #151c24;
+      --surface-2: #1b252f;
+      --text: #f5f8f4;
+      --text-soft: #d6dfd8;
+      --muted: #9aa6b0;
+      --line: rgba(255, 255, 255, 0.1);
+      --line-strong: rgba(255, 255, 255, 0.22);
+      --accent: #c9f752;
+      --accent-2: #8fffcf;
+      --accent-ink: #0a0e0b;
+      --cyan: #67e8f9;
+      --orange: #ff9466;
+      --violet: #a78bfa;
+      --grid: rgba(255, 255, 255, 0.05);
+      --glow-1: rgba(103, 232, 249, 0.14);
+      --glow-2: rgba(201, 247, 82, 0.12);
+      --card-grad: linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.022));
+      --header-bg: rgba(11, 15, 20, 0.72);
+      --shadow: 0 32px 90px rgba(0, 0, 0, 0.42);
+      --shadow-soft: 0 18px 50px rgba(0, 0, 0, 0.26);
+      --selection-ink: #0b0f14;
+      --sans: "MiSans", "HarmonyOS Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+      --mono: "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Consolas, "Liberation Mono", monospace;
+      color-scheme: dark;
+    }
+
+    [data-theme="light"] {
+      --bg: #f6f4ec;
+      --bg-soft: #f0eee5;
+      --surface: rgba(255, 253, 248, 0.78);
+      --surface-solid: #fffdf8;
+      --surface-2: #f1eee4;
+      --text: #131813;
+      --text-soft: #2d362f;
+      --muted: #626d64;
+      --line: rgba(19, 24, 19, 0.1);
+      --line-strong: rgba(19, 24, 19, 0.24);
+      --accent: #365314;
+      --accent-2: #0f766e;
+      --accent-ink: #f7fee7;
+      --cyan: #0e7490;
+      --orange: #c2410c;
+      --violet: #6d28d9;
+      --grid: rgba(19, 24, 19, 0.055);
+      --glow-1: rgba(14, 116, 144, 0.1);
+      --glow-2: rgba(54, 83, 20, 0.1);
+      --card-grad: linear-gradient(145deg, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.34));
+      --header-bg: rgba(244, 242, 233, 0.78);
+      --shadow: 0 32px 90px rgba(41, 49, 36, 0.14);
+      --shadow-soft: 0 18px 50px rgba(41, 49, 36, 0.1);
+      --selection-ink: #f7fee7;
+      color-scheme: light;
+    }
+
+    /* ==========================================================
+       02. 基础重置与页面氛围
+       ========================================================== */
+    *,
+    *::before,
+    *::after { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 104px;
+      background: var(--bg);
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      min-width: 320px;
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 17px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -3;
+      background:
+        radial-gradient(900px 640px at 88% -8%, var(--glow-1), transparent 64%),
+        radial-gradient(780px 720px at -12% 38%, var(--glow-2), transparent 62%),
+        radial-gradient(720px 600px at 70% 88%, rgba(167, 139, 250, 0.055), transparent 66%),
+        var(--bg);
+      pointer-events: none;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 72px 72px;
+      -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, #000 0%, transparent 80%);
+      mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, #000 0%, transparent 80%);
+      pointer-events: none;
+    }
+
+    .page-noise {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      opacity: 0.035;
+      mix-blend-mode: soft-light;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.7'/%3E%3C/svg%3E");
+    }
+
+    .cursor-glow {
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 0;
+      width: 540px;
+      height: 540px;
+      border-radius: 50%;
+      opacity: 0;
+      pointer-events: none;
+      background: radial-gradient(circle, var(--glow-2) 0%, transparent 66%);
+      transform: translate(-50%, -50%);
+      transition: opacity 0.45s ease;
+    }
+
+    body.mouse-ready .cursor-glow { opacity: 1; }
+
+    main,
+    header,
+    footer { position: relative; z-index: 1; }
+
+    ::selection {
+      background: var(--accent);
+      color: var(--selection-ink);
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    button {
+      padding: 0;
+      border: 0;
+      background: none;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    img, svg { display: block; max-width: 100%; }
+
+    ul, ol, dl, dd, figure, blockquote { margin: 0; padding: 0; }
+
+    li { list-style: none; }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+
+    .skip-link {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 999;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-size: 13px;
+      font-weight: 800;
+      transform: translateY(-160%);
+      transition: transform 0.25s ease;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 48px));
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    .mono {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    /* ==========================================================
+       03. 顶部导航
+       ========================================================== */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 120;
+      width: var(--progress, 0%);
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--cyan));
+      box-shadow: 0 0 18px var(--glow-2);
+      pointer-events: none;
+    }
+
+    .menu-scrim {
+      display: none;
+    }
+
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 80;
+      padding: 14px 0;
+      transition: padding 0.35s ease, background 0.35s ease, border-color 0.35s ease, backdrop-filter 0.35s ease;
+      border-bottom: 1px solid transparent;
+    }
+
+    .site-header.is-scrolled {
+      padding: 8px 0;
+      border-bottom-color: var(--line);
+      background: var(--header-bg);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+      backdrop-filter: blur(18px) saturate(140%);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      flex: 0 0 auto;
+    }
+
+    .brand__mark {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border-radius: 14px;
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      box-shadow: 0 10px 30px var(--glow-2);
+      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease;
+    }
+
+    .brand:hover .brand__mark {
+      transform: rotate(-8deg) scale(1.06);
+      box-shadow: 0 14px 38px var(--glow-2);
+    }
+
+    .brand__text { display: flex; flex-direction: column; gap: 1px; }
+
+    .brand__name {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      line-height: 1.2;
+    }
+
+    .brand__sub {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      line-height: 1.4;
+    }
+
+    .nav__links {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      padding: 5px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--surface-solid) 56%, transparent);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .nav__links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+    }
+
+    .nav__links a span {
+      color: currentColor;
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.08em;
+      opacity: 0.5;
+    }
+
+    .nav__links a:hover {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .nav__links a.is-active {
+      background: var(--accent);
+      color: var(--accent-ink);
+    }
+
+    .nav__links a.is-active span { opacity: 0.65; }
+
+    .nav__actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+
+    .icon-btn {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--surface-solid) 55%, transparent);
+      transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+    }
+
+    .icon-btn:hover {
+      transform: translateY(-2px);
+      border-color: var(--line-strong);
+      background: var(--surface-2);
+    }
+
+    .icon-btn svg { width: 18px; height: 18px; }
+
+    .theme-toggle .icon-sun { display: none; }
+    [data-theme="light"] .theme-toggle .icon-sun { display: block; }
+    [data-theme="light"] .theme-toggle .icon-moon { display: none; }
+
+    .menu-toggle {
+      display: none;
+      position: relative;
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--surface-solid) 55%, transparent);
+    }
+
+    .menu-toggle span {
+      position: absolute;
+      left: 12px;
+      width: 16px;
+      height: 1.5px;
+      border-radius: 2px;
+      background: var(--text);
+      transition: transform 0.3s ease, top 0.3s ease;
+    }
+
+    .menu-toggle span:first-child { top: 17px; }
+    .menu-toggle span:last-child { top: 23px; }
+
+    body.menu-open .menu-toggle span:first-child { top: 20px; transform: rotate(45deg); }
+    body.menu-open .menu-toggle span:last-child { top: 20px; transform: rotate(-45deg); }
+
+    /* ==========================================================
+       04. 英雄区
+       ========================================================== */
+    .hero {
+      position: relative;
+      display: flex;
+      min-height: 100svh;
+      align-items: center;
+      padding: 132px 0 86px;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "SUPPLY CHAIN";
+      position: absolute;
+      top: 18%;
+      left: -2%;
+      z-index: -1;
+      color: transparent;
+      font-family: var(--mono);
+      font-size: clamp(80px, 15vw, 220px);
+      font-weight: 800;
+      letter-spacing: -0.07em;
+      line-height: 1;
+      opacity: 0.045;
+      -webkit-text-stroke: 1px var(--text);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .hero__grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(440px, 0.95fr);
+      align-items: center;
+      gap: clamp(32px, 4.8vw, 64px);
+    }
+
+    .hero__copy {
+      position: relative;
+      z-index: 2;
+      min-width: 0;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--surface-solid) 50%, transparent);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      line-height: 1;
+      opacity: 0;
+      animation: heroUp 0.8s 0.05s cubic-bezier(0.2, 0.75, 0.2, 1) forwards;
+    }
+
+    .dot-live {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent);
+      animation: livePulse 2.4s ease-out infinite;
+    }
+
+    .hero h1 {
+      margin: 24px 0 28px;
+      font-size: clamp(3.25rem, 6.6vw, 6.3rem);
+      font-weight: 850;
+      letter-spacing: -0.065em;
+      line-height: 0.99;
+    }
+
+    .hero h1 .line {
+      display: block;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: heroUp 0.95s cubic-bezier(0.16, 0.8, 0.22, 1) forwards;
+    }
+
+    .hero h1 .line:nth-child(1) { animation-delay: 0.12s; }
+    .hero h1 .line:nth-child(2) { animation-delay: 0.2s; }
+
+    .hero h1 .line--accent {
+      position: relative;
+      z-index: 0;
+      color: var(--accent);
+      animation-delay: 0.28s;
+    }
+
+    .hero h1 .line--accent::after {
+      content: "";
+      position: absolute;
+      right: 0.06em;
+      bottom: 0.04em;
+      left: 0.02em;
+      z-index: -1;
+      height: 0.1em;
+      border-radius: 999px;
+      background: var(--accent);
+      opacity: 0.2;
+      transform: rotate(-1.2deg);
+    }
+
+    .hero h1 .dot {
+      display: inline-block;
+      color: var(--text);
+      animation: blink 3.2s step-end infinite;
+    }
+
+    .hero__lead {
+      max-width: 610px;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 1.3vw, 1.14rem);
+      line-height: 1.92;
+      opacity: 0;
+      animation: heroUp 0.9s 0.42s cubic-bezier(0.2, 0.75, 0.2, 1) forwards;
+    }
+
+    .hero__lead strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .hero__lead .hl {
+      color: var(--accent);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .nowrap { white-space: nowrap; }
+
+    .hero__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 11px;
+      margin-top: 34px;
+      opacity: 0;
+      animation: heroUp 0.9s 0.52s cubic-bezier(0.2, 0.75, 0.2, 1) forwards;
+    }
+
+    .btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 52px;
+      padding: 0 23px;
+      overflow: hidden;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      font-size: 14.5px;
+      font-weight: 750;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      transition: transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.32s ease, background 0.32s ease, border-color 0.32s ease, color 0.32s ease;
+    }
+
+    .btn svg {
+      width: 15px;
+      height: 15px;
+      transition: transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .btn:hover { transform: translateY(-3px); }
+    .btn:active { transform: translateY(-1px) scale(0.99); }
+    .btn:hover svg { transform: translate(2px, -2px); }
+
+    .btn--primary {
+      background: var(--accent);
+      color: var(--accent-ink);
+      box-shadow: 0 12px 34px var(--glow-2);
+    }
+
+    .btn--primary:hover { box-shadow: 0 18px 46px var(--glow-2); }
+
+    .btn--ghost {
+      border-color: var(--line-strong);
+      background: color-mix(in srgb, var(--surface-solid) 48%, transparent);
+      color: var(--text);
+    }
+
+    .btn--ghost:hover {
+      border-color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 8%, var(--surface-solid));
+    }
+
+    .hero__meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 20px;
+      margin-top: 34px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      opacity: 0;
+      animation: heroUp 0.9s 0.62s cubic-bezier(0.2, 0.75, 0.2, 1) forwards;
+    }
+
+    .hero__meta span { display: inline-flex; align-items: center; gap: 7px; }
+
+    .hero__meta i {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--muted);
+    }
+
+    .hero__visual {
+      position: relative;
+      z-index: 1;
+      min-width: 0;
+      perspective: 1200px;
+    }
+
+    .waybill-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 520px;
+      margin-left: auto;
+      opacity: 0;
+      transform: translateY(26px) rotate(1deg);
+      animation: heroCard 1.05s 0.34s cubic-bezier(0.16, 0.8, 0.22, 1) forwards;
+    }
+
+    .sticker {
+      position: absolute;
+      z-index: 3;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      line-height: 1;
+      white-space: nowrap;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+    }
+
+    .sticker--top {
+      top: -15px;
+      right: 18px;
+      background: var(--accent);
+      color: var(--accent-ink);
+      transform: rotate(4deg);
+    }
+
+    .sticker--bottom {
+      bottom: -20px;
+      left: 24px;
+      border: 1px solid var(--line-strong);
+      background: var(--surface-solid);
+      color: var(--text);
+      transform: rotate(-5deg);
+    }
+
+    .waybill {
+      position: relative;
+      padding: 28px;
+      overflow: hidden;
+      border: 1px solid var(--line-strong);
+      border-radius: 26px;
+      background:
+        radial-gradient(100% 70% at 100% 0%, color-mix(in srgb, var(--cyan) 10%, transparent), transparent 55%),
+        linear-gradient(160deg, color-mix(in srgb, var(--surface-solid) 92%, var(--accent) 8%), var(--surface-solid));
+      box-shadow: var(--shadow);
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: box-shadow 0.4s ease;
+    }
+
+    .waybill::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 24px;
+      right: 24px;
+      height: 2px;
+      border-radius: 0 0 4px 4px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.85;
+    }
+
+    .waybill::after {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      z-index: 0;
+      border: 1px dashed var(--line);
+      border-radius: 18px;
+      pointer-events: none;
+    }
+
+    .waybill > * { position: relative; z-index: 1; }
+
+    .waybill__head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 3px 0 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .waybill__title {
+      margin: 4px 0 0;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .waybill__no {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      line-height: 1.7;
+      letter-spacing: 0.1em;
+      text-align: right;
+    }
+
+    .waybill__no b {
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .route {
+      display: flex;
+      flex-direction: column;
+      padding: 16px 0 8px;
+    }
+
+    .route__item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 22px minmax(0, 1fr) auto;
+      gap: 10px;
+      padding-bottom: 16px;
+    }
+
+    .route__item:last-child { padding-bottom: 0; }
+
+    .route__item::before {
+      content: "";
+      position: absolute;
+      top: 15px;
+      bottom: -1px;
+      left: 6px;
+      width: 1px;
+      background: var(--line);
+    }
+
+    .route__item:last-child::before { display: none; }
+
+    .route__dot {
+      position: relative;
+      z-index: 1;
+      width: 13px;
+      height: 13px;
+      margin-top: 4px;
+      border: 1px solid var(--line-strong);
+      border-radius: 50%;
+      background: var(--surface-solid);
+    }
+
+    .route__item.is-done .route__dot {
+      border-color: var(--accent);
+      background: var(--accent);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 11%, transparent);
+    }
+
+    .route__item.is-current .route__dot {
+      border-color: var(--accent);
+      background: var(--accent);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 16%, transparent), 0 0 18px var(--accent);
+      animation: routePulse 2.2s ease-out infinite;
+    }
+
+    .route__item.is-next .route__dot {
+      border-style: dashed;
+      border-color: var(--accent);
+    }
+
+    .route__label {
+      display: block;
+      margin-bottom: 1px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      line-height: 1.6;
+      text-transform: uppercase;
+    }
+
+    .route__body h3 {
+      margin: 0;
+      color: var(--text-soft);
+      font-size: 18px;
+      font-weight: 750;
+      letter-spacing: -0.01em;
+      line-height: 1.4;
+    }
+
+    .route__item.is-current .route__body h3 { color: var(--text); }
+
+    .route__body p {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .route__code {
+      padding-top: 4px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+    }
+
+    .route__item.is-current .route__code { color: var(--accent); }
+
+    .waybill__status {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 4px 0 14px;
+      padding: 10px 12px;
+      border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--line));
+      border-radius: 11px;
+      background: color-mix(in srgb, var(--accent) 9%, transparent);
+      color: var(--text-soft);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .waybill__status .dot-live { width: 5px; height: 5px; }
+
+    .waybill__status b {
+      margin-left: auto;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+    }
+
+    .barcode {
+      height: 36px;
+      border-radius: 2px;
+      opacity: 0.67;
+      background: repeating-linear-gradient(
+        90deg,
+        currentColor 0 1px,
+        transparent 1px 3px,
+        currentColor 3px 5px,
+        transparent 5px 7px,
+        currentColor 7px 8px,
+        transparent 8px 12px,
+        currentColor 12px 15px,
+        transparent 15px 17px,
+        currentColor 17px 18px,
+        transparent 18px 21px
+      );
+    }
+
+    .waybill__foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      line-height: 1.6;
+    }
+
+    .waybill__foot span:last-child { text-align: right; }
+
+    .hero__scroll {
+      position: absolute;
+      bottom: 26px;
+      left: 50%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.16em;
+      transform: translateX(-50%);
+      opacity: 0;
+      animation: fadeIn 1s 1.15s ease forwards;
+    }
+
+    .hero__scroll i {
+      position: relative;
+      width: 44px;
+      height: 1px;
+      overflow: hidden;
+      background: var(--line);
+    }
+
+    .hero__scroll i::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--accent);
+      transform: translateX(-100%);
+      animation: scrollLine 2.2s ease-in-out infinite;
+    }
+
+    /* ==========================================================
+       05. 滚动字幕
+       ========================================================== */
+    .marquee {
+      position: relative;
+      z-index: 2;
+      overflow: hidden;
+      padding: 15px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--surface-solid) 46%, transparent);
+    }
+
+    .marquee__track {
+      display: flex;
+      width: max-content;
+      animation: marquee 32s linear infinite;
+    }
+
+    .marquee:hover .marquee__track { animation-play-state: paused; }
+
+    .marquee__group {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      padding-right: 28px;
+    }
+
+    .marquee__group span {
+      color: var(--text-soft);
+      font-size: 12px;
+      font-weight: 750;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    .marquee__group i {
+      color: var(--accent);
+      font-size: 13px;
+      font-style: normal;
+      line-height: 1;
+    }
+
+    /* ==========================================================
+       06. 通用区块
+       ========================================================== */
+    .section {
+      position: relative;
+      padding: clamp(84px, 10vw, 138px) 0;
+    }
+
+    .section__head {
+      max-width: 900px;
+      margin-bottom: clamp(42px, 5.2vw, 66px);
+    }
+
+    .kicker {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
+
+    .kicker::before {
+      content: "";
+      width: 28px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .kicker b {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .section h2 {
+      margin: 17px 0 18px;
+      font-size: clamp(2.35rem, 5vw, 4.55rem);
+      font-weight: 850;
+      letter-spacing: -0.055em;
+      line-height: 1.06;
+    }
+
+    .section__desc {
+      max-width: 640px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.9;
+    }
+
+    .mark {
+      position: relative;
+      z-index: 0;
+      display: inline-block;
+      isolation: isolate;
+      color: var(--accent);
+    }
+
+    .mark::after {
+      content: "";
+      position: absolute;
+      right: -0.04em;
+      bottom: 0.04em;
+      left: -0.04em;
+      z-index: -1;
+      height: 0.2em;
+      border-radius: 999px;
+      background: var(--accent);
+      opacity: 0.16;
+      transform: rotate(-1.2deg);
+    }
+
+    .js .reveal { opacity: 0; }
+
+    .js .reveal.is-visible {
+      opacity: 1;
+      animation: revealUp 0.82s cubic-bezier(0.16, 0.8, 0.22, 1) backwards;
+      animation-delay: var(--delay, 0s);
+    }
+
+    /* ==========================================================
+       07. 关于我
+       ========================================================== */
+    .about__grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
+      align-items: start;
+      gap: clamp(34px, 6vw, 78px);
+    }
+
+    .about__story p {
+      margin: 0 0 18px;
+      color: var(--text-soft);
+      font-size: clamp(1.04rem, 1.25vw, 1.12rem);
+      line-height: 1.95;
+    }
+
+    .about__story p:last-child { margin-bottom: 0; }
+
+    .about__lead {
+      color: var(--text) !important;
+      font-size: clamp(1.36rem, 2.2vw, 1.78rem) !important;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      line-height: 1.62 !important;
+    }
+
+    .about__quote {
+      position: relative;
+      margin: 30px 0;
+      padding: 20px 24px;
+      border-left: 2px solid var(--accent);
+      border-radius: 0 16px 16px 0;
+      background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 9%, transparent), transparent 88%);
+      color: var(--text);
+      font-size: clamp(1.15rem, 1.9vw, 1.4rem);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.7;
+    }
+
+    .about__quote::before {
+      content: "“";
+      position: absolute;
+      top: -15px;
+      left: 13px;
+      color: var(--accent);
+      font-family: Georgia, serif;
+      font-size: 54px;
+      font-weight: 700;
+      line-height: 1;
+      opacity: 0.35;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 26px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--surface-solid) 45%, transparent);
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1;
+      transition: transform 0.28s ease, border-color 0.28s ease, color 0.28s ease, background 0.28s ease;
+    }
+
+    .chip::before {
+      content: "";
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .chip:hover {
+      border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+      background: color-mix(in srgb, var(--accent) 8%, transparent);
+      color: var(--text);
+      transform: translateY(-2px);
+    }
+
+    .profile-card {
+      position: relative;
+      overflow: hidden;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--card-grad);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .profile-card::before {
+      content: "";
+      position: absolute;
+      top: -90px;
+      right: -70px;
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--glow-2), transparent 68%);
+      pointer-events: none;
+    }
+
+    .profile-card > * { position: relative; z-index: 1; }
+
+    .profile-card__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .online {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 8px;
+      border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
+      border-radius: 999px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 7px;
+      letter-spacing: 0.08em;
+      line-height: 1;
+    }
+
+    .online::before {
+      content: "";
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 8px currentColor;
+    }
+
+    .profile-list > div {
+      display: grid;
+      grid-template-columns: 64px minmax(0, 1fr);
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px dashed var(--line);
+    }
+
+    .profile-list > div:last-child { border-bottom: 0; padding-bottom: 4px; }
+
+    .profile-list dt {
+      padding-top: 3px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      line-height: 1.5;
+      text-transform: uppercase;
+    }
+
+    .profile-list dd {
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 650;
+      line-height: 1.6;
+    }
+
+    .profile-list dd span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    .profile-card__foot {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 15px;
+      padding-top: 13px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.1em;
+      line-height: 1.5;
+    }
+
+    .about__stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: clamp(40px, 5vw, 58px);
+    }
+
+    .stat {
+      position: relative;
+      overflow: hidden;
+      padding: 20px 22px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: color-mix(in srgb, var(--surface-solid) 42%, transparent);
+      transition: transform 0.32s ease, border-color 0.32s ease, background 0.32s ease;
+    }
+
+    .stat::after {
+      content: "";
+      position: absolute;
+      right: -24px;
+      bottom: -38px;
+      width: 90px;
+      height: 90px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      transition: transform 0.5s ease, border-color 0.5s ease;
+    }
+
+    .stat:hover {
+      transform: translateY(-4px);
+      border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+      background: color-mix(in srgb, var(--accent) 5%, var(--surface-solid));
+    }
+
+    .stat:hover::after {
+      border-color: var(--accent);
+      transform: scale(1.15);
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: clamp(2rem, 3.7vw, 3rem);
+      font-weight: 600;
+      letter-spacing: -0.08em;
+      line-height: 1;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    /* ==========================================================
+       08. 技能区
+       ========================================================== */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .skill-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 264px;
+      overflow: hidden;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--card-grad);
+      transition: transform 0.42s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.32s ease, box-shadow 0.42s ease, background 0.32s ease;
+    }
+
+    .skill-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      opacity: 0;
+      background: radial-gradient(340px circle at var(--mx, 50%) var(--my, 0%), color-mix(in srgb, var(--accent) 13%, transparent), transparent 64%);
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+
+    .skill-card > * { position: relative; z-index: 1; }
+
+    .skill-card:hover {
+      transform: translateY(-6px);
+      border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+      background: color-mix(in srgb, var(--accent) 4%, var(--surface-solid));
+      box-shadow: var(--shadow-soft);
+    }
+
+    .skill-card:hover::before { opacity: 1; }
+
+    .skill-card--feature {
+      grid-column: span 7;
+      min-height: 352px;
+      background:
+        radial-gradient(110% 110% at 100% 0%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 58%),
+        var(--card-grad);
+    }
+
+    .skill-card--data { grid-column: span 5; }
+    .skill-card--wide { grid-column: span 4; }
+
+    .skill-card__head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .skill-icon {
+      display: grid;
+      width: 48px;
+      height: 48px;
+      place-items: center;
+      border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--line));
+      border-radius: 15px;
+      background: color-mix(in srgb, var(--accent) 8%, transparent);
+      color: var(--accent);
+      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.32s ease, color 0.32s ease;
+    }
+
+    .skill-icon svg { width: 23px; height: 23px; }
+
+    .skill-card:hover .skill-icon {
+      background: var(--accent);
+      color: var(--accent-ink);
+      transform: rotate(-7deg) scale(1.06);
+    }
+
+    .skill-no {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      line-height: 1.6;
+      text-align: right;
+    }
+
+    .skill-card h3 {
+      margin: 22px 0 9px;
+      font-size: clamp(1.45rem, 2.1vw, 1.82rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.25;
+    }
+
+    .skill-card > p {
+      max-width: 500px;
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 14.5px;
+      line-height: 1.8;
+    }
+
+    .flow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 7px;
+      margin: auto 0 18px;
+    }
+
+    .flow__node {
+      padding: 8px 11px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: color-mix(in srgb, var(--surface-solid) 55%, transparent);
+      color: var(--text-soft);
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1;
+      transition: transform 0.28s ease, background 0.28s ease, color 0.28s ease, border-color 0.28s ease;
+    }
+
+    .flow__node:hover {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: var(--accent-ink);
+      transform: translateY(-3px);
+    }
+
+    .flow__arrow {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 9px;
+      opacity: 0.65;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: auto;
+    }
+
+    .tags li {
+      padding: 4px 7px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.03em;
+      line-height: 1.5;
+      transition: border-color 0.25s ease, color 0.25s ease;
+    }
+
+    .skill-card:hover .tags li {
+      border-color: color-mix(in srgb, var(--accent) 22%, var(--line));
+      color: var(--text-soft);
+    }
+
+    .skill-watermark {
+      position: absolute;
+      right: -4px;
+      bottom: -22px;
+      z-index: 0;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 112px;
+      font-weight: 800;
+      letter-spacing: -0.1em;
+      line-height: 1;
+      opacity: 0.028;
+      pointer-events: none;
+      transition: opacity 0.4s ease, transform 0.5s ease;
+    }
+
+    .skill-card:hover .skill-watermark {
+      opacity: 0.06;
+      transform: translateX(-8px);
+    }
+
+    .mini-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 5px;
+      height: 48px;
+      margin: auto 0 20px;
+      padding-top: 4px;
+    }
+
+    .mini-chart i {
+      flex: 1;
+      height: var(--h);
+      min-height: 4px;
+      border-radius: 3px 3px 1px 1px;
+      background: linear-gradient(to top, var(--accent), color-mix(in srgb, var(--cyan) 65%, transparent));
+      opacity: 0.55;
+      transform-origin: bottom;
+      transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+      transition-delay: calc(var(--i) * 35ms);
+    }
+
+    .skill-card:hover .mini-chart i {
+      opacity: 1;
+      transform: scaleY(1.08);
+    }
+
+    .status-line {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: auto;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      line-height: 1.6;
+    }
+
+    .status-line::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 65%, transparent);
+    }
+
+    /* ==========================================================
+       09. 爱好区
+       ========================================================== */
+    .hobby-grid {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .hobby {
+      position: relative;
+      display: flex;
+      min-height: 218px;
+      flex-direction: column;
+      justify-content: flex-end;
+      overflow: hidden;
+      padding: 23px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--card-grad);
+      transition: transform 0.42s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.32s ease, box-shadow 0.42s ease;
+    }
+
+    .hobby:hover {
+      transform: translateY(-5px);
+      border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+      box-shadow: var(--shadow-soft);
+    }
+
+    .hobby--city {
+      grid-column: span 4;
+      grid-row: span 2;
+      min-height: 450px;
+      background:
+        radial-gradient(110% 100% at 90% 0%, color-mix(in srgb, var(--cyan) 15%, transparent), transparent 58%),
+        linear-gradient(150deg, color-mix(in srgb, var(--surface-solid) 90%, var(--cyan) 10%), var(--surface-solid));
+    }
+
+    .hobby--badminton,
+    .hobby--photo,
+    .hobby--music,
+    .hobby--food { grid-column: span 2; }
+
+    .hobby--badminton {
+      background:
+        radial-gradient(110% 110% at 100% 0%, color-mix(in srgb, var(--orange) 16%, transparent), transparent 60%),
+        var(--card-grad);
+    }
+
+    .hobby--photo {
+      background:
+        radial-gradient(110% 110% at 100% 0%, color-mix(in srgb, var(--violet) 16%, transparent), transparent 60%),
+        var(--card-grad);
+    }
+
+    .hobby--music {
+      background:
+        radial-gradient(110% 110% at 100% 100%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 60%),
+        var(--card-grad);
+    }
+
+    .hobby--food {
+      background:
+        radial-gradient(110% 110% at 100% 0%, color-mix(in srgb, var(--orange) 11%, transparent), transparent 60%),
+        var(--card-grad);
+    }
+
+    .hobby__art {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .hobby::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(to top, var(--surface-solid) 2%, color-mix(in srgb, var(--surface-solid) 58%, transparent) 35%, transparent 72%);
+      opacity: 0.74;
+      pointer-events: none;
+    }
+
+    .hobby--city::after {
+      background: linear-gradient(to top, var(--surface-solid) 0%, color-mix(in srgb, var(--surface-solid) 65%, transparent) 28%, transparent 65%);
+      opacity: 0.9;
+    }
+
+    .hobby__body {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hobby__index {
+      position: absolute;
+      top: 21px;
+      left: 23px;
+      z-index: 2;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      line-height: 1.5;
+      text-transform: uppercase;
+    }
+
+    .city-legend {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--surface-solid) 45%, transparent);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.08em;
+      line-height: 1;
+    }
+
+    .city-legend i {
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    .hobby h3 {
+      margin: 0 0 6px;
+      font-size: clamp(1.3rem, 1.95vw, 1.58rem);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.3;
+    }
+
+    .hobby p {
+      max-width: 360px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 13.5px;
+      line-height: 1.72;
+    }
+
+    .hobby__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 13px;
+    }
+
+    .hobby__tags span {
+      padding: 3px 7px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.05em;
+      line-height: 1.5;
+    }
+
+    .city-map {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.9;
+    }
+
+    .city-map .land {
+      fill: none;
+      stroke: var(--line-strong);
+      stroke-width: 0.8;
+      opacity: 0.6;
+    }
+
+    .city-map .route-line {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-dasharray: 5 9;
+      animation: dashFlow 22s linear infinite;
+    }
+
+    .city-map .route-halo {
+      fill: none;
+      stroke: color-mix(in srgb, var(--accent) 22%, transparent);
+      stroke-width: 8;
+      stroke-linecap: round;
+    }
+
+    .city-map .node {
+      fill: var(--accent);
+      stroke: var(--surface-solid);
+      stroke-width: 3;
+    }
+
+    .city-map .node-ring {
+      fill: none;
+      stroke: color-mix(in srgb, var(--accent) 55%, transparent);
+      stroke-width: 1;
+    }
+
+    .city-map text {
+      fill: var(--muted);
+      stroke: var(--surface-solid);
+      stroke-width: 3px;
+      paint-order: stroke fill;
+      stroke-linejoin: round;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+    }
+
+    .city-map .city-zh {
+      fill: var(--text);
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .hobby--city:hover .route-line { animation-duration: 7s; }
+
+    .shuttle {
+      position: absolute;
+      top: 24px;
+      right: 20px;
+      z-index: 1;
+      width: 92px;
+      opacity: 0.9;
+      transform: rotate(12deg);
+      transition: transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .shuttle path,
+    .shuttle circle {
+      stroke: var(--orange);
+      stroke-width: 1.4;
+      fill: none;
+    }
+
+    .shuttle circle:last-of-type {
+      fill: var(--orange);
+      opacity: 0.22;
+    }
+
+    .hobby--badminton:hover .shuttle { transform: rotate(-8deg) translate(-5px, 5px); }
+
+    .aperture {
+      position: absolute;
+      top: -42px;
+      right: -30px;
+      z-index: 1;
+      width: 180px;
+      height: 180px;
+      border: 1px solid color-mix(in srgb, var(--violet) 35%, var(--line));
+      border-radius: 50%;
+      opacity: 0.8;
+      transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .aperture::before,
+    .aperture::after {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border: 1px solid color-mix(in srgb, var(--violet) 25%, var(--line));
+      border-radius: 50%;
+    }
+
+    .aperture::after { inset: 47px; background: color-mix(in srgb, var(--violet) 10%, transparent); }
+
+    .aperture i {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 1px;
+      height: 140%;
+      background: color-mix(in srgb, var(--violet) 25%, transparent);
+      transform-origin: center;
+    }
+
+    .aperture i:nth-child(1) { transform: translate(-50%, -50%) rotate(0deg); }
+    .aperture i:nth-child(2) { transform: translate(-50%, -50%) rotate(60deg); }
+    .aperture i:nth-child(3) { transform: translate(-50%, -50%) rotate(120deg); }
+
+    .hobby--photo:hover .aperture { transform: rotate(28deg) scale(1.04); }
+
+    .equalizer {
+      position: absolute;
+      top: 44px;
+      right: 20px;
+      left: 20px;
+      z-index: 1;
+      display: flex;
+      height: 72px;
+      align-items: flex-end;
+      gap: 4px;
+      opacity: 0.26;
+    }
+
+    .equalizer i {
+      flex: 1;
+      height: var(--h);
+      border-radius: 2px 2px 0 0;
+      background: linear-gradient(to top, var(--accent), transparent);
+      transform-origin: bottom;
+      transition: transform 0.42s cubic-bezier(0.2, 0.8, 0.2, 1);
+      transition-delay: calc(var(--i) * 18ms);
+    }
+
+    .hobby--music:hover .equalizer i { transform: scaleY(0.62); }
+    .hobby--music:hover .equalizer i:nth-child(3n) { transform: scaleY(1.12); }
+
+    .bowl {
+      position: absolute;
+      top: 20px;
+      right: 18px;
+      z-index: 1;
+      width: 84px;
+      opacity: 0.85;
+      transition: transform 0.5s ease;
+    }
+
+    .bowl path,
+    .bowl circle {
+      fill: none;
+      stroke: var(--orange);
+      stroke-width: 1.5;
+      stroke-linecap: round;
+    }
+
+    .bowl .steam {
+      stroke-width: 1.2;
+      opacity: 0.65;
+      animation: steam 3.2s ease-in-out infinite;
+    }
+
+    .hobby--food:hover .bowl { transform: translateY(-4px) rotate(-3deg); }
+
+    .hobby__note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.06em;
+      line-height: 1.6;
+    }
+
+    /* ==========================================================
+       10. 计划区
+       ========================================================== */
+    .plan__track {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 13px;
+      padding-top: 32px;
+    }
+
+    .plan__track::before {
+      content: "";
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      left: 8px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent), var(--cyan), var(--line));
+      opacity: 0.55;
+    }
+
+    .plan-step {
+      position: relative;
+      padding: 21px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--card-grad);
+      transition: transform 0.34s ease, border-color 0.34s ease, background 0.34s ease;
+    }
+
+    .plan-step::before {
+      content: "";
+      position: absolute;
+      top: -32px;
+      left: 21px;
+      width: 11px;
+      height: 11px;
+      border: 1px solid var(--accent);
+      border-radius: 50%;
+      background: var(--bg);
+      box-shadow: 0 0 0 5px var(--bg);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .plan-step:first-child::before {
+      background: var(--accent);
+      box-shadow: 0 0 0 5px var(--bg), 0 0 18px var(--accent);
+    }
+
+    .plan-step:hover {
+      transform: translateY(-4px);
+      border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+      background: color-mix(in srgb, var(--accent) 4%, var(--surface-solid));
+    }
+
+    .plan-step:hover::before {
+      background: var(--accent);
+      box-shadow: 0 0 0 5px var(--bg), 0 0 16px var(--accent);
+    }
+
+    .plan-step__time {
+      display: block;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      line-height: 1.6;
+      text-transform: uppercase;
+    }
+
+    .plan-step h3 {
+      margin: 0 0 9px;
+      font-size: 1.32rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.35;
+    }
+
+    .plan-step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13.5px;
+      line-height: 1.75;
+    }
+
+    .plan-step__tag {
+      display: inline-flex;
+      margin-top: 15px;
+      padding: 4px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.06em;
+      line-height: 1.5;
+    }
+
+    .plan-quote {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-top: 30px;
+      padding: 19px 22px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: color-mix(in srgb, var(--surface-solid) 38%, transparent);
+    }
+
+    .plan-quote__icon {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      flex: 0 0 38px;
+      place-items: center;
+      border-radius: 12px;
+      background: color-mix(in srgb, var(--accent) 11%, transparent);
+      color: var(--accent);
+    }
+
+    .plan-quote__icon svg { width: 18px; height: 18px; }
+
+    .plan-quote p {
+      margin: 0;
+      color: var(--text-soft);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.7;
+    }
+
+    .plan-quote small {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+    }
+
+    /* ==========================================================
+       11. 联系区
+       ========================================================== */
+    .contact {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(98px, 12vw, 162px) 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .contact__glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 0;
+      width: min(780px, 110vw);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--glow-2) 0%, transparent 63%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .contact__ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 0;
+      width: min(680px, 92vw);
+      aspect-ratio: 1;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .contact__ring::before,
+    .contact__ring::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+    }
+
+    .contact__ring::before { inset: 9%; }
+    .contact__ring::after { inset: 21%; border-style: dashed; }
+
+    .contact__ring i {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 58%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      transform: translate(-50%, -50%) rotate(-24deg);
+      opacity: 0.28;
+    }
+
+    .contact__inner {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .contact__inner .kicker { justify-content: center; }
+
+    .contact h2 {
+      margin: 20px 0 24px;
+      font-size: clamp(3rem, 8vw, 6.8rem);
+      font-weight: 850;
+      letter-spacing: -0.065em;
+      line-height: 0.98;
+    }
+
+    .contact h2 span {
+      display: inline-block;
+      color: var(--accent);
+    }
+
+    .contact__desc {
+      max-width: 620px;
+      margin: 0 auto 30px;
+      color: var(--muted);
+      font-size: 15.5px;
+      line-height: 1.95;
+    }
+
+    .contact__actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 11px;
+    }
+
+    .contact__note {
+      margin: 25px auto 0;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      line-height: 1.8;
+    }
+
+    .site-footer {
+      padding: 26px 0 34px;
+      border-top: 1px solid var(--line);
+    }
+
+    .footer__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .footer__brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer__mark {
+      display: grid;
+      width: 30px;
+      height: 30px;
+      flex: 0 0 30px;
+      place-items: center;
+      border: 1px solid var(--line-strong);
+      border-radius: 9px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .footer__brand p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .footer__brand p strong {
+      color: var(--text-soft);
+      font-weight: 700;
+    }
+
+    .footer__meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.06em;
+      line-height: 1.6;
+    }
+
+    .to-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      transition: color 0.25s ease, transform 0.25s ease;
+    }
+
+    .to-top:hover { color: var(--accent); transform: translateY(-2px); }
+
+    .to-top svg { width: 12px; height: 12px; }
+
+    /* ==========================================================
+       12. 提示条
+       ========================================================== */
+    .toast {
+      position: fixed;
+      bottom: max(24px, env(safe-area-inset-bottom));
+      left: 50%;
+      z-index: 200;
+      max-width: calc(100vw - 32px);
+      padding: 11px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      background: var(--surface-solid);
+      color: var(--text);
+      box-shadow: var(--shadow-soft);
+      font-size: 12px;
+      line-height: 1.5;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 16px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .toast.is-visible {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    /* ==========================================================
+       13. 动画
+       ========================================================== */
+    @keyframes heroUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes heroCard {
+      from { opacity: 0; transform: translateY(28px) rotate(1deg); }
+      to { opacity: 1; transform: translateY(0) rotate(0); }
+    }
+
+    @keyframes revealUp {
+      from { opacity: 0; transform: translateY(26px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    @keyframes livePulse {
+      0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 36%, transparent); }
+      70% { box-shadow: 0 0 0 7px transparent; }
+      100% { box-shadow: 0 0 0 0 transparent; }
+    }
+
+    @keyframes routePulse {
+      0%, 100% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent), 0 0 10px var(--accent); }
+      50% { box-shadow: 0 0 0 7px color-mix(in srgb, var(--accent) 5%, transparent), 0 0 22px var(--accent); }
+    }
+
+    @keyframes blink {
+      0%, 46%, 52%, 100% { opacity: 1; }
+      48%, 50% { opacity: 0.25; }
+    }
+
+    @keyframes scrollLine {
+      0% { transform: translateX(-100%); }
+      55%, 100% { transform: translateX(100%); }
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    @keyframes dashFlow {
+      to { stroke-dashoffset: -280; }
+    }
+
+    @keyframes steam {
+      0%, 100% { opacity: 0.35; transform: translateY(0); }
+      50% { opacity: 0.8; transform: translateY(-3px); }
+    }
+
+    /* ==========================================================
+       14. 响应式
+       ========================================================== */
+    @media (max-width: 1080px) {
+      .hero h1 { font-size: clamp(3rem, 6.8vw, 5.9rem); }
+      .hero__grid { gap: 44px; }
+      .waybill { padding: 22px; }
+      .nav__links a { padding: 9px 11px; }
+    }
+
+    @media (max-width: 960px) {
+      .hero {
+        min-height: auto;
+        padding: 130px 0 82px;
+      }
+
+      .hero__grid {
+        grid-template-columns: 1fr;
+        gap: 52px;
+      }
+
+      .hero__copy { max-width: 760px; }
+
+      .hero__visual {
+        width: 100%;
+        max-width: 520px;
+        margin: 0 auto;
+      }
+
+      .waybill-wrap { margin: 0 auto; }
+
+      .hero__scroll { display: none; }
+
+      .about__grid { grid-template-columns: 1fr; }
+
+      .profile-card { max-width: 620px; }
+
+      .skills-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+      .skill-card--feature,
+      .skill-card--data,
+      .skill-card--wide { grid-column: span 2; }
+
+      .skill-card--feature { min-height: 330px; }
+
+      .hobby--city { min-height: 420px; }
+
+      .plan__track { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 44px; }
+
+      .plan__track::before { display: none; }
+
+      .plan-step::before { top: 21px; left: -1px; transform: translateX(-50%); }
+
+      .plan-step:first-child::before { top: 21px; }
+    }
+
+    @media (max-width: 860px) {
+      html { scroll-padding-top: 88px; }
+
+      .site-header { padding: 10px 0; }
+
+      .site-header.is-scrolled { padding: 8px 0; }
+
+      .nav__links {
+        position: fixed;
+        top: 78px;
+        right: 16px;
+        left: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+        padding: 12px;
+        border-radius: 22px;
+        background: var(--surface-solid);
+        box-shadow: var(--shadow);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translateY(-10px) scale(0.985);
+        transition: opacity 0.28s ease, transform 0.28s ease, visibility 0.28s ease;
+      }
+
+      body.menu-open .nav__links {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(0) scale(1);
+      }
+
+      .nav__links a {
+        justify-content: flex-start;
+        padding: 14px 15px;
+        border-radius: 14px;
+        color: var(--text-soft);
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      .nav__links a span {
+        margin-right: 5px;
+        color: var(--muted);
+      }
+
+      .menu-toggle { display: block; }
+
+      .menu-scrim {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 70;
+        visibility: hidden;
+        opacity: 0;
+        background: color-mix(in srgb, var(--bg) 58%, transparent);
+        -webkit-backdrop-filter: blur(6px);
+        backdrop-filter: blur(6px);
+        pointer-events: none;
+        transition: opacity 0.28s ease, visibility 0.28s ease;
+      }
+
+      body.menu-open .menu-scrim {
+        visibility: visible;
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      body.menu-open { overflow: hidden; }
+
+      .brand__text { display: none; }
+
+      .about__stats { margin-top: 36px; }
+    }
+
+    @media (max-width: 720px) {
+      .container { width: calc(100% - 32px); }
+
+      .hero { padding-top: 114px; }
+
+      .hero h1 {
+        font-size: clamp(3rem, 12.5vw, 4.5rem);
+        letter-spacing: -0.06em;
+      }
+
+      .hero__lead { font-size: 15px; line-height: 1.9; }
+
+      .section { padding: 78px 0; }
+
+      .section h2 { font-size: clamp(2.15rem, 9vw, 3.2rem); }
+
+      .section__desc { font-size: 14px; }
+
+      .about__lead { font-size: 1.3rem !important; }
+
+      .about__stats { grid-template-columns: repeat(3, 1fr); }
+
+      .stat { padding: 16px; }
+
+      .stat span { font-size: 10px; }
+
+      .skills-grid { grid-template-columns: 1fr; gap: 12px; }
+
+      .skill-card,
+      .skill-card--feature,
+      .skill-card--data,
+      .skill-card--wide {
+        grid-column: span 1;
+        min-height: 250px;
+        padding: 22px;
+      }
+
+      .skill-card--feature { min-height: 330px; }
+
+      .skill-watermark { font-size: 94px; }
+
+      .hobby-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+
+      .hobby--city {
+        grid-column: span 2;
+        grid-row: auto;
+        min-height: 380px;
+      }
+
+      .hobby--badminton,
+      .hobby--photo,
+      .hobby--music,
+      .hobby--food { grid-column: span 1; }
+
+      .hobby { padding: 19px; }
+
+      .hobby__index { top: 18px; left: 19px; }
+
+      .hobby p { font-size: 12.5px; }
+
+      .plan__track {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding-top: 0;
+        padding-left: 28px;
+      }
+
+      .plan__track::before {
+        display: block;
+        top: 12px;
+        right: auto;
+        bottom: 12px;
+        left: 5px;
+        width: 1px;
+        height: auto;
+        background: linear-gradient(to bottom, var(--accent), var(--cyan), var(--line));
+      }
+
+      .plan-step { padding: 19px; }
+
+      .plan-step::before,
+      .plan-step:first-child::before {
+        top: 25px;
+        left: -23px;
+        transform: none;
+      }
+
+      .contact h2 { font-size: clamp(2.8rem, 13vw, 4.8rem); }
+
+      .contact__desc { font-size: 14px; }
+
+      .contact__ring { width: 88vw; }
+
+      .footer__inner { align-items: flex-start; }
+    }
+
+    @media (max-width: 540px) {
+      .container { width: calc(100% - 28px); }
+
+      .hero { padding-top: 105px; padding-bottom: 64px; }
+
+      .hero h1 { font-size: clamp(2.72rem, 13.2vw, 3.8rem); }
+
+      .hero__meta { gap: 7px 14px; font-size: 9px; }
+
+      .hero__actions { gap: 8px; }
+
+      .btn { min-height: 48px; padding: 0 18px; font-size: 14px; }
+
+      .waybill { padding: 22px 20px; }
+
+      .sticker--bottom { left: 8px; bottom: -18px; }
+
+      .sticker--top { right: 8px; }
+
+      .route__body h3 { font-size: 17px; }
+
+      .waybill__foot { font-size: 8px; }
+
+      .about__stats { gap: 8px; }
+
+      .stat { padding: 14px 12px; border-radius: 14px; }
+
+      .stat strong { font-size: 1.8rem; }
+
+      .stat span { font-size: 9px; }
+
+      .profile-card { padding: 20px; }
+
+      .profile-list > div { grid-template-columns: 56px minmax(0, 1fr); }
+
+      .hobby-grid { grid-template-columns: 1fr; }
+
+      .hobby--city { grid-column: span 1; }
+
+      .hobby--badminton,
+      .hobby--photo,
+      .hobby--music,
+      .hobby--food { grid-column: span 1; }
+
+      .hobby { min-height: 205px; }
+
+      .hobby--city { min-height: 350px; }
+
+      .hobby p { max-width: 280px; }
+
+      .contact__actions { flex-direction: column; align-items: stretch; }
+
+      .contact__actions .btn { width: 100%; }
+
+      .footer__meta { width: 100%; justify-content: space-between; }
+
+      .toast { font-size: 12px; }
+    }
+
+    @media (hover: none), (pointer: coarse) {
+      .cursor-glow { display: none; }
+
+      .skill-card:hover,
+      .hobby:hover,
+      .stat:hover,
+      .plan-step:hover { transform: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+
+      .js .reveal { opacity: 1; }
+      .hero h1 .line,
+      .eyebrow,
+      .hero__lead,
+      .hero__actions,
+      .hero__meta,
+      .waybill-wrap { opacity: 1; transform: none; }
+    }
+
+    /* ==========================================================
+       右侧栏目导航
+       ========================================================== */
+    .section-rail {
+      position: fixed;
+      top: 50%;
+      left: calc(50% + 602px);
+      z-index: 60;
+      display: none;
+      width: 86px;
+      padding: 9px 7px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: color-mix(in srgb, var(--header-bg) 90%, var(--bg));
+      box-shadow: var(--shadow-soft);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      backdrop-filter: blur(16px) saturate(140%);
+      transform: translateY(-50%);
+    }
+
+    .section-rail__label {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 6.5px;
+      letter-spacing: 0.06em;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    .section-rail nav { display: flex; flex-direction: column; gap: 2px; }
+
+    .section-rail a {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 5px;
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 9.5px;
+      font-weight: 650;
+      line-height: 1.2;
+      white-space: nowrap;
+      transition: color 0.25s ease, background 0.25s ease;
+    }
+
+    .section-rail a span {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 6.5px;
+      font-weight: 400;
+      opacity: 0.65;
+    }
+
+    .section-rail a:hover {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .section-rail a.is-active {
+      background: color-mix(in srgb, var(--accent) 12%, transparent);
+      color: var(--accent);
+    }
+
+    .section-rail a.is-active span { color: var(--accent); opacity: 1; }
+
+    @media (min-width: 1380px) {
+      .section-rail { display: block; }
+    }
+
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="page-noise" aria-hidden="true"></div>
+  <div class="cursor-glow" aria-hidden="true"></div>
+  <div class="scroll-progress" aria-hidden="true"></div>
+  <div class="menu-scrim" id="menu-scrim" aria-hidden="true"></div>
+
+  <header class="site-header" id="site-header">
+    <div class="container nav">
+      <a class="brand" href="#top" aria-label="回到首页">
+        <span class="brand__mark">曹</span>
+        <span class="brand__text">
+          <span class="brand__name">CAO ZHIQIANG</span>
+          <span class="brand__sub">PERSONAL SITE / 2026</span>
+        </span>
+      </a>
+
+      <nav class="nav__links" id="primary-nav" aria-label="主导航">
+        <a href="#about"><span>01</span>关于我</a>
+        <a href="#skills"><span>02</span>技能</a>
+        <a href="#hobbies"><span>03</span>爱好</a>
+        <a href="#plan"><span>04</span>计划</a>
+        <a href="#contact"><span>05</span>联系</a>
+      </nav>
+
+      <div class="nav__actions">
+        <button class="icon-btn theme-toggle" id="theme-toggle" type="button" aria-label="切换到深色模式" aria-pressed="true" title="切换深浅色">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4.2"/>
+            <path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"/>
+          </svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20.2 14.6A8.5 8.5 0 0 1 9.4 3.8 8.6 8.6 0 1 0 20.2 14.6Z"/>
+          </svg>
+        </button>
+
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="primary-nav">
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <aside class="section-rail" aria-label="栏目导航">
+    <span class="section-rail__label">栏目 / SECTIONS</span>
+    <nav>
+      <a href="#about"><span>01</span>关于我</a>
+      <a href="#skills"><span>02</span>技能</a>
+      <a href="#hobbies"><span>03</span>爱好</a>
+      <a href="#plan"><span>04</span>计划</a>
+      <a href="#contact"><span>05</span>联系</a>
+    </nav>
+  </aside>
+
+  <main id="main">
+    <!-- 英雄区 -->
+    <section class="hero" id="top">
+      <div class="container hero__grid">
+        <div class="hero__copy">
+          <p class="eyebrow">
+            <span class="dot-live" aria-hidden="true"></span>
+            AVAILABLE FOR FRIENDSHIP · 2026
+          </p>
+
+          <h1>
+            <span class="line">把大学生活</span>
+            <span class="line">运营成一条</span>
+            <span class="line line--accent">漂亮的供应链<span class="dot">.</span></span>
+          </h1>
+
+          <p class="hero__lead">
+            嗨，我是<strong>曹智强</strong>。扬州人，常州工业职业技术学院
+            <strong class="nowrap">26 供应链运营 331 班新生</strong>。正在学习怎么把一箱货从 <span class="nowrap">A点</span> 稳稳送到 <span class="nowrap">B点</span>，
+            顺便也把自己从“高中模式”<span class="nowrap">升级成</span><span class="hl">“大学 Pro Max”</span>。
+          </p>
+
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="#about">
+              认识我一下
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 13 13 3M5 3h8v8"/>
+              </svg>
+            </a>
+            <a class="btn btn--ghost" href="#skills">
+              看看我的技能
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M8 2v12M3 9l5 5 5-5"/>
+              </svg>
+            </a>
+          </div>
+
+          <div class="hero__meta">
+            <span><i aria-hidden="true"></i> 江苏 · 扬州 → 常州</span>
+            <span><i aria-hidden="true"></i> 供应链运营 / 2026</span>
+            <span><i aria-hidden="true"></i> 专转本 · 持续加载中</span>
+          </div>
+        </div>
+
+        <div class="hero__visual">
+          <div class="waybill-wrap">
+            <span class="sticker sticker--top">专转本 · 加载中</span>
+            <span class="sticker sticker--bottom">供应链运营 331</span>
+
+            <article class="waybill" id="waybill" aria-label="我的个人运单">
+              <header class="waybill__head">
+                <div>
+                  <span class="mono">Personal Waybill</span>
+                  <h2 class="waybill__title">个人运单</h2>
+                </div>
+                <div class="waybill__no">
+                  NO.<br>
+                  <b>2026-331</b>
+                </div>
+              </header>
+
+              <ol class="route">
+                <li class="route__item is-done">
+                  <span class="route__dot" aria-hidden="true"></span>
+                  <div class="route__body">
+                    <span class="route__label">Origin · 已发货</span>
+                    <h3>扬州</h3>
+                    <p>早茶胃 + 慢生活 buff，起点已签收。</p>
+                  </div>
+                  <span class="route__code">YZ</span>
+                </li>
+
+                <li class="route__item is-current">
+                  <span class="route__dot" aria-hidden="true"></span>
+                  <div class="route__body">
+                    <span class="route__label">Current · 当前库存</span>
+                    <h3>常州 · 供应链运营 331</h3>
+                    <p>常州工业职业技术学院，大一在读，持续增值。</p>
+                  </div>
+                  <span class="route__code">CZ</span>
+                </li>
+
+                <li class="route__item is-next">
+                  <span class="route__dot" aria-hidden="true"></span>
+                  <div class="route__body">
+                    <span class="route__label">Next · 下一站</span>
+                    <h3>本科 · 供应链</h3>
+                    <p>专转本备考中，方向不变，目标变大。</p>
+                  </div>
+                  <span class="route__code">NEXT</span>
+                </li>
+
+                <li class="route__item">
+                  <span class="route__dot" aria-hidden="true"></span>
+                  <div class="route__body">
+                    <span class="route__label">Destination · 终点站</span>
+                    <h3>更大的世界</h3>
+                    <p>先把今天的货发好，再想下一站去哪。</p>
+                  </div>
+                  <span class="route__code">∞</span>
+                </li>
+              </ol>
+
+              <div class="waybill__status">
+                <span class="dot-live" aria-hidden="true"></span>
+                运输中 · 持续增值
+                <b>STATUS / OK</b>
+              </div>
+
+              <div class="barcode" aria-hidden="true"></div>
+
+              <div class="waybill__foot">
+                <span>ITEM: 一个好奇心过剩的扬州男孩<br>WEIGHT: 早八也很轻</span>
+                <span>HANDLE WITH CARE<br>BUT FEEL FREE TO SAY HI</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero__scroll" aria-hidden="true">
+        SCROLL TO EXPLORE
+        <i></i>
+      </div>
+    </section>
+
+    <!-- 滚动字幕 -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <div class="marquee__group">
+          <span>供应链运营</span><i>✦</i>
+          <span>扬州土著</span><i>✦</i>
+          <span>常州求学</span><i>✦</i>
+          <span>专转本备战中</span><i>✦</i>
+          <span>表格整理爱好者</span><i>✦</i>
+          <span>城市漫游</span><i>✦</i>
+          <span>羽毛球气氛组</span><i>✦</i>
+          <span>持续增值</span><i>✦</i>
+        </div>
+        <div class="marquee__group">
+          <span>供应链运营</span><i>✦</i>
+          <span>扬州土著</span><i>✦</i>
+          <span>常州求学</span><i>✦</i>
+          <span>专转本备战中</span><i>✦</i>
+          <span>表格整理爱好者</span><i>✦</i>
+          <span>城市漫游</span><i>✦</i>
+          <span>羽毛球气氛组</span><i>✦</i>
+          <span>持续增值</span><i>✦</i>
+        </div>
+      </div>
+    </div>
+
+    <!-- 关于我 -->
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section__head reveal">
+          <p class="kicker"><b>01</b> About Me</p>
+          <h2>一个正在<span class="mark">补货</span>的普通人</h2>
+          <p class="section__desc">
+            没有开挂履历，也没有主角光环。只是一个从扬州来到常州、正在认真研究“怎么把大学生活过明白”的 26 级新生。
+          </p>
+        </div>
+
+        <div class="about__grid">
+          <div class="about__story reveal" style="--delay: 0.06s">
+            <p class="about__lead">
+              我是曹智强，一个从扬州坐高铁到常州读供应链的 26 级新生。
+            </p>
+            <p>
+              扬州给了我慢悠悠的早茶胃，常州给了我赶早八的闹钟。现在，我在常州工业职业技术学院
+              <strong class="nowrap">26 供应链运营 331 班</strong>，学习怎么把一箱货从 <span class="nowrap">A点</span> 稳稳送到 <span class="nowrap">B点</span>——
+              顺便，也把自己从“高中模式”升级成“大学 Pro Max”。
+            </p>
+            <p>
+              我没有开挂的履历，但有一点点不服输：想把专转本考下来，想继续把供应链这个专业读深，
+              想在社团、课堂和球场里都留下点动静。目前最大的项目，是把自己运营得靠谱一点、有趣一点、再厉害一点。
+            </p>
+
+            <blockquote class="about__quote">
+              先把眼前这箱货发好，再想下一站去哪。
+            </blockquote>
+
+            <div class="chips" aria-label="个人标签">
+              <span class="chip">扬州土著</span>
+              <span class="chip">早八幸存者</span>
+              <span class="chip">表格整理强迫症</span>
+              <span class="chip">专转本备战中</span>
+              <span class="chip">羽毛球气氛组</span>
+            </div>
+          </div>
+
+          <aside class="profile-card reveal" style="--delay: 0.14s" aria-label="个人档案">
+            <div class="profile-card__head">
+              <span class="mono">Profile.dat</span>
+              <span class="online">ONLINE</span>
+            </div>
+
+            <dl class="profile-list">
+              <div>
+                <dt>籍贯</dt>
+                <dd>江苏 · 扬州<span>一座适合慢慢吃早茶的城市</span></dd>
+              </div>
+              <div>
+                <dt>学校</dt>
+                <dd>常州工业职业技术学院<span>从扬州出发，在常州加载新地图</span></dd>
+              </div>
+              <div>
+                <dt>班级</dt>
+                <dd>26 供应链运营 331<span>班级坐标，欢迎来抓人</span></dd>
+              </div>
+              <div>
+                <dt>方向</dt>
+                <dd>供应链运营<span>采购 · 仓储 · 配送 · 交付，逐个点亮</span></dd>
+              </div>
+              <div>
+                <dt>下一站</dt>
+                <dd>专转本 → 本科<span>继续学供应链，不急着给自己设上限</span></dd>
+              </div>
+              <div>
+                <dt>状态</dt>
+                <dd>持续加载中<span>好奇心充足，成长空间巨大</span></dd>
+              </div>
+            </dl>
+
+            <div class="profile-card__foot">
+              <span>LAST UPDATE / 2026.09</span>
+              <span>VERSION / 1.0</span>
+            </div>
+          </aside>
+        </div>
+
+        <div class="about__stats reveal" style="--delay: 0.1s" aria-label="个人数字">
+          <div class="stat">
+            <strong>26</strong>
+            <span>级新生 / 新地图已开启</span>
+          </div>
+          <div class="stat">
+            <strong>331</strong>
+            <span>班级坐标 / 欢迎来串门</span>
+          </div>
+          <div class="stat">
+            <strong>∞</strong>
+            <span>待解锁可能 / 不设上限</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 技能 -->
+    <section class="section" id="skills">
+      <div class="container">
+        <div class="section__head reveal">
+          <p class="kicker"><b>02</b> Skill Stack</p>
+          <h2>我的技能，<span class="mark">正在升级</span></h2>
+          <p class="section__desc">
+            不假装全能，也不低估自己。下面这些，有些已经能上手，有些还在“加载中”——但每一个都在往更靠谱的方向走。
+          </p>
+        </div>
+
+        <div class="skills-grid">
+          <article class="skill-card skill-card--feature reveal" style="--delay: 0.02s" data-spotlight>
+            <div class="skill-card__head">
+              <span class="skill-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5v-9Z"/>
+                  <path d="m3.5 7.5 8.5 4.5 8.5-4.5M12 12v9M7.7 5.2l8.6 4.5"/>
+                </svg>
+              </span>
+              <span class="skill-no">MAIN QUEST<br>SKILL / 01</span>
+            </div>
+            <h3>供应链运营</h3>
+            <p>
+              我的主线任务。正在把“听起来很厉害”变成“真的会一点”：从采购、仓储到配送、交付，先搞懂每一步为什么存在。
+            </p>
+            <div class="flow" aria-label="供应链流程">
+              <span class="flow__node">采购</span>
+              <span class="flow__arrow">→</span>
+              <span class="flow__node">入库</span>
+              <span class="flow__arrow">→</span>
+              <span class="flow__node">配送</span>
+              <span class="flow__arrow">→</span>
+              <span class="flow__node">交付</span>
+            </div>
+            <ul class="tags">
+              <li>供应链基础</li>
+              <li>仓储管理</li>
+              <li>物流配送</li>
+              <li>成本意识</li>
+            </ul>
+            <span class="skill-watermark" aria-hidden="true">SCM</span>
+          </article>
+
+          <article class="skill-card skill-card--data reveal" style="--delay: 0.08s" data-spotlight>
+            <div class="skill-card__head">
+              <span class="skill-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>
+                </svg>
+              </span>
+              <span class="skill-no">DATA / 02</span>
+            </div>
+            <h3>数据处理</h3>
+            <p>
+              不算大神，但能把一团乱麻的表格收拾得能见人。VLOOKUP、数据透视表、图表，正在逐个点亮。
+            </p>
+            <div class="mini-chart" aria-hidden="true">
+              <i style="--h: 30%; --i: 1"></i>
+              <i style="--h: 48%; --i: 2"></i>
+              <i style="--h: 40%; --i: 3"></i>
+              <i style="--h: 66%; --i: 4"></i>
+              <i style="--h: 54%; --i: 5"></i>
+              <i style="--h: 82%; --i: 6"></i>
+              <i style="--h: 70%; --i: 7"></i>
+              <i style="--h: 92%; --i: 8"></i>
+            </div>
+            <ul class="tags">
+              <li>Excel</li>
+              <li>WPS</li>
+              <li>数据透视</li>
+              <li>可视化</li>
+            </ul>
+          </article>
+
+          <article class="skill-card skill-card--wide reveal" style="--delay: 0.03s" data-spotlight>
+            <div class="skill-card__head">
+              <span class="skill-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M16 20v-1.5a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4V20"/>
+                  <circle cx="9" cy="7" r="3.4"/>
+                  <path d="M22 20v-1.5a4 4 0 0 0-3-3.87M16.5 3.7a3.4 3.4 0 0 1 0 6.6"/>
+                </svg>
+              </span>
+              <span class="skill-no">TEAM / 03</span>
+            </div>
+            <h3>沟通协作</h3>
+            <p>
+              小组作业里那个会拉群、会分工、会催进度，但绝不一个人硬扛的人。把一群人凑齐不容易，让事情落地更不容易。
+            </p>
+            <ul class="tags">
+              <li>组织协调</li>
+              <li>团队合作</li>
+              <li>表达</li>
+            </ul>
+          </article>
+
+          <article class="skill-card skill-card--wide reveal" style="--delay: 0.09s" data-spotlight>
+            <div class="skill-card__head">
+              <span class="skill-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 20h9"/>
+                  <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+                </svg>
+              </span>
+              <span class="skill-no">CONTENT / 04</span>
+            </div>
+            <h3>内容表达</h3>
+            <p>
+              PPT 能讲清楚，页面能排顺眼，文案能说人话。不追求花里胡哨，先让看到的人一眼明白你想说什么。
+            </p>
+            <ul class="tags">
+              <li>PPT</li>
+              <li>排版</li>
+              <li>文案</li>
+            </ul>
+          </article>
+
+          <article class="skill-card skill-card--wide reveal" style="--delay: 0.15s" data-spotlight>
+            <div class="skill-card__head">
+              <span class="skill-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m12 3 1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7L12 3Z"/>
+                  <path d="m19 15 .8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z"/>
+                </svg>
+              </span>
+              <span class="skill-no">TOOL / 05</span>
+            </div>
+            <h3>AI 工具</h3>
+            <p>
+              把重复劳动交给 AI，把判断和审美留给自己。会用工具不稀奇，知道什么时候该用、怎么用，才算真的会。
+            </p>
+            <ul class="tags">
+              <li>DeepSeek</li>
+              <li>提示词</li>
+              <li>效率工具</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 爱好 -->
+    <section class="section" id="hobbies">
+      <div class="container">
+        <div class="section__head reveal">
+          <p class="kicker"><b>03</b> Off Duty</p>
+          <h2>正经学习，<span class="mark">认真快乐</span></h2>
+          <p class="section__desc">
+            以下爱好仅代表当前版本，后续可能自动更新。毕竟大学这么大，总要多试几样，才知道自己真正喜欢什么。
+          </p>
+        </div>
+
+        <div class="hobby-grid">
+          <article class="hobby hobby--city reveal" style="--delay: 0.02s">
+            <span class="hobby__index">HOBBY / 01</span>
+            <div class="city-legend" aria-hidden="true">
+              <span>YZ</span><i>→</i><span>CZ</span><i>→</i><span>∞</span>
+            </div>
+            <div class="hobby__art" aria-hidden="true">
+              <svg class="city-map" viewBox="0 0 600 460" preserveAspectRatio="xMidYMid slice">
+                <path class="land" d="M-20 330 C80 280, 120 360, 220 320 S380 250, 470 300 S620 260, 660 210"/>
+                <path class="land" d="M-30 180 C60 210, 100 120, 190 150 S320 210, 400 150 S540 80, 650 120"/>
+                <path class="land" d="M90 460 C130 380, 220 420, 300 360 S420 300, 500 330 S600 420, 650 390"/>
+                <path class="land" d="M300 -20 C290 80, 360 120, 340 210 S250 310, 300 400 S420 450, 420 500"/>
+                <path class="route-halo" d="M110 350 C180 330, 175 255, 255 232 S355 190, 392 122 S470 84, 512 76"/>
+                <path class="route-line" d="M110 350 C180 330, 175 255, 255 232 S355 190, 392 122 S470 84, 512 76"/>
+                <circle class="node-ring" cx="255" cy="232" r="16"/>
+                <circle class="node" cx="255" cy="232" r="6"/>
+                <circle class="node-ring" cx="392" cy="122" r="16"/>
+                <circle class="node" cx="392" cy="122" r="6"/>
+                <circle class="node" cx="512" cy="76" r="6"/>
+                <text x="232" y="270">CZ</text>
+                <text class="city-zh" x="230" y="287">常州</text>
+                <text x="362" y="156">NEXT</text>
+                <text class="city-zh" x="360" y="173">下一站</text>
+                <text x="490" y="106">∞</text>
+              </svg>
+            </div>
+            <div class="hobby__body">
+              <h3>城市漫游</h3>
+              <p>
+                在扬州吃早茶，在常州找巷子。我的导航原则很简单：大方向没错就行，拐错弯也算景点。
+              </p>
+              <div class="hobby__tags">
+                <span>扬州</span>
+                <span>常州</span>
+                <span>下一站待定</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="hobby hobby--badminton reveal" style="--delay: 0.06s">
+            <span class="hobby__index">HOBBY / 02</span>
+            <div class="hobby__art" aria-hidden="true">
+              <svg class="shuttle" viewBox="0 0 120 120">
+                <circle cx="43" cy="87" r="13"/>
+                <circle cx="43" cy="87" r="8"/>
+                <path d="M50 76 72 23M53 78 89 30M55 81 102 47M57 85 108 68"/>
+                <path d="M72 23c9-5 14-3 17 1M89 30c11-3 16 0 18 5M102 47c10 1 13 5 13 11M108 68c5 6 4 10 0 14"/>
+              </svg>
+            </div>
+            <div class="hobby__body">
+              <h3>羽毛球</h3>
+              <p>杀球不一定过网，气势必须先到位。欢迎约球，水平不限，快乐优先。</p>
+              <div class="hobby__tags">
+                <span>约球</span>
+                <span>气氛组</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="hobby hobby--photo reveal" style="--delay: 0.1s">
+            <span class="hobby__index">HOBBY / 03</span>
+            <div class="hobby__art" aria-hidden="true">
+              <div class="aperture">
+                <i></i><i></i><i></i>
+              </div>
+            </div>
+            <div class="hobby__body">
+              <h3>随手拍</h3>
+              <p>拍云、拍树、拍食堂新菜。技术还在加载，出片主要靠缘分。</p>
+              <div class="hobby__tags">
+                <span>生活记录</span>
+                <span>随缘构图</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="hobby hobby--music reveal" style="--delay: 0.14s">
+            <span class="hobby__index">HOBBY / 04</span>
+            <div class="hobby__art" aria-hidden="true">
+              <div class="equalizer">
+                <i style="--h: 32%; --i: 1"></i><i style="--h: 58%; --i: 2"></i><i style="--h: 44%; --i: 3"></i>
+                <i style="--h: 76%; --i: 4"></i><i style="--h: 52%; --i: 5"></i><i style="--h: 88%; --i: 6"></i>
+                <i style="--h: 36%; --i: 7"></i><i style="--h: 64%; --i: 8"></i><i style="--h: 47%; --i: 9"></i>
+                <i style="--h: 72%; --i: 10"></i><i style="--h: 41%; --i: 11"></i><i style="--h: 57%; --i: 12"></i>
+              </div>
+            </div>
+            <div class="hobby__body">
+              <h3>耳机常驻</h3>
+              <p>写作业、走路、发呆都自带 BGM。歌单跨度很大，主打一个随缘。</p>
+              <div class="hobby__tags">
+                <span>行走 BGM</span>
+                <span>随机播放</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="hobby hobby--food reveal" style="--delay: 0.18s">
+            <span class="hobby__index">HOBBY / 05</span>
+            <div class="hobby__art" aria-hidden="true">
+              <svg class="bowl" viewBox="0 0 100 100">
+                <path class="steam" d="M34 28c-6-8 5-11 0-20M52 27c-6-8 5-11 0-20M68 29c-6-8 5-11 0-20"/>
+                <path d="M15 45h70c-1 21-14 34-35 34S16 66 15 45Z"/>
+                <path d="M11 45h78"/>
+                <path d="M43 79h14"/>
+              </svg>
+            </div>
+            <div class="hobby__body">
+              <h3>找好吃的</h3>
+              <p>人生大事之一：今天吃什么。可以为了一个店坐半小时公交，也可以为食堂新菜排十分钟队。</p>
+              <div class="hobby__tags">
+                <span>探店</span>
+                <span>食堂测评</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 计划 -->
+    <section class="section" id="plan">
+      <div class="container">
+        <div class="section__head reveal">
+          <p class="kicker"><b>04</b> Next Stop</p>
+          <h2>不急着定义自己，<br>先把自己<span class="mark">运营好</span></h2>
+          <p class="section__desc">
+            我没有把未来写成一张死板的甘特图，只给自己留了四个关键词：打基础、专转本、继续学、去实践。
+          </p>
+        </div>
+
+        <div class="plan__track">
+          <article class="plan-step reveal" style="--delay: 0.02s">
+            <span class="plan-step__time">NOW / 大一</span>
+            <h3>把地基打厚</h3>
+            <p>专业课学扎实，英语不落下，Excel 和 AI 工具练顺手。先做个靠谱的大一新生。</p>
+            <span class="plan-step__tag">进行中</span>
+          </article>
+
+          <article class="plan-step reveal" style="--delay: 0.07s">
+            <span class="plan-step__time">NEXT / 大二—大三</span>
+            <h3>专转本</h3>
+            <p>认真备考，目标明确：把“专科”读成起点，不是终点。想去本科继续学供应链。</p>
+            <span class="plan-step__tag">重点任务</span>
+          </article>
+
+          <article class="plan-step reveal" style="--delay: 0.12s">
+            <span class="plan-step__time">THEN / 本科</span>
+            <h3>继续深读</h3>
+            <p>把理论补满，把实践拉长。供应链不只是送快递，它值得被认真研究。</p>
+            <span class="plan-step__tag">长期主义</span>
+          </article>
+
+          <article class="plan-step reveal" style="--delay: 0.17s">
+            <span class="plan-step__time">FUTURE / 更远</span>
+            <h3>进入行业</h3>
+            <p>去真实的供应链里摸爬滚打，做一个能把事情落地、也能把团队带起来的人。</p>
+            <span class="plan-step__tag">保持好奇</span>
+          </article>
+        </div>
+
+        <div class="plan-quote reveal" style="--delay: 0.1s">
+          <span class="plan-quote__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 21s7-4.4 7-10V5l-7-2-7 2v6c0 5.6 7 10 7 10Z"/>
+              <path d="m9 11 2 2 4-4"/>
+            </svg>
+          </span>
+          <p>
+            我不急着定义自己，我先把自己运营好。
+            <small>—— 一个 26 级供应链新生的长期计划</small>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 联系 -->
+    <section class="contact" id="contact">
+      <div class="contact__glow" aria-hidden="true"></div>
+      <div class="contact__ring" aria-hidden="true"><i></i></div>
+
+      <div class="container contact__inner reveal">
+        <p class="kicker"><b>05</b> Say Hi</p>
+        <h2>下一站，<br><span>认识一下？</span></h2>
+        <p class="contact__desc">
+          社团招新、小组作业、打球缺人、食堂拼桌，或者你也在准备专转本——
+          都可以来找我聊两句。多认识一个人，大学就多一条支线剧情。
+        </p>
+
+        <div class="contact__actions">
+          <button class="btn btn--primary" id="share-btn" type="button">
+            分享这个主页
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12.5" cy="3.5" r="2.2"/>
+              <circle cx="3.5" cy="8" r="2.2"/>
+              <circle cx="12.5" cy="12.5" r="2.2"/>
+              <path d="m5.5 7 5-2.5M5.5 9l5 2.5"/>
+            </svg>
+          </button>
+          <a class="btn btn--ghost" href="#top">
+            回到顶部
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M8 14V2M3 7l5-5 5 5"/>
+            </svg>
+          </a>
+        </div>
+
+        <p class="contact__note">
+          微信不挂在网上，怕被作业追着跑；见面扫你，或者来 26 供应链运营 331 班抓我。
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <span class="footer__mark">曹</span>
+        <p><strong>曹智强</strong> · 常州工业职业技术学院<br>26 供应链运营 331</p>
+      </div>
+      <div class="footer__meta">
+        <span>© <span id="year">2026</span> CAO ZHIQIANG</span>
+        <span>HANDMADE WITH HTML / CSS / JS</span>
+        <a class="to-top" href="#top">
+          回到顶部
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M8 14V2M3 7l5-5 5 5"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var root = document.documentElement;
+      var body = document.body;
+      var header = document.getElementById('site-header');
+      var themeBtn = document.getElementById('theme-toggle');
+      var menuBtn = document.getElementById('menu-toggle');
+      var menuScrim = document.getElementById('menu-scrim');
+      var nav = document.getElementById('primary-nav');
+      var navLinks = Array.prototype.slice.call(nav.querySelectorAll('a'));
+      var progressBar = document.querySelector('.scroll-progress');
+      var cursorGlow = document.querySelector('.cursor-glow');
+      var waybill = document.getElementById('waybill');
+      var toast = document.getElementById('toast');
+      var shareBtn = document.getElementById('share-btn');
+      var yearEl = document.getElementById('year');
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+      var toastTimer;
+
+      /* ---------- 年份 ---------- */
+      if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+      /* ---------- 深浅色 ---------- */
+      function currentTheme() {
+        return root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+      }
+
+      function applyTheme(theme, persist) {
+        root.setAttribute('data-theme', theme);
+        var isDark = theme === 'dark';
+        themeBtn.setAttribute('aria-pressed', String(!isDark));
+        themeBtn.setAttribute('aria-label', isDark ? '切换到浅色模式' : '切换到深色模式');
+        themeBtn.title = isDark ? '切换到浅色模式' : '切换到深色模式';
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', isDark ? '#0b0f14' : '#f6f4ec');
+        if (persist) {
+          try { localStorage.setItem('cao-site-theme-v2', theme); } catch (e) {}
+        }
+      }
+
+      applyTheme(currentTheme(), false);
+
+      themeBtn.addEventListener('click', function () {
+        applyTheme(currentTheme() === 'dark' ? 'light' : 'dark', true);
+      });
+
+      /* ---------- 移动端菜单 ---------- */
+      function setMenu(open) {
+        body.classList.toggle('menu-open', open);
+        menuBtn.setAttribute('aria-expanded', String(open));
+        menuBtn.setAttribute('aria-label', open ? '关闭菜单' : '打开菜单');
+      }
+
+      menuBtn.addEventListener('click', function () {
+        setMenu(!body.classList.contains('menu-open'));
+      });
+
+      navLinks.forEach(function (link) {
+        link.addEventListener('click', function () { setMenu(false); });
+      });
+
+      if (menuScrim) {
+        menuScrim.addEventListener('click', function () { setMenu(false); });
+      }
+
+      document.addEventListener('click', function (event) {
+        if (!body.classList.contains('menu-open')) return;
+        if (!nav.contains(event.target) && !menuBtn.contains(event.target)) setMenu(false);
+      });
+
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+          setMenu(false);
+          if (document.activeElement && nav.contains(document.activeElement)) menuBtn.focus();
+        }
+      });
+
+      window.addEventListener('resize', function () {
+        if (window.innerWidth > 860) setMenu(false);
+      });
+
+      /* ---------- 滚动进度 / 头部状态 ---------- */
+      var scrollQueued = false;
+
+      function onScroll() {
+        var scrollTop = window.scrollY || document.documentElement.scrollTop;
+        var max = document.documentElement.scrollHeight - window.innerHeight;
+        var ratio = max > 0 ? Math.min(1, Math.max(0, scrollTop / max)) : 0;
+        if (progressBar) progressBar.style.setProperty('--progress', (ratio * 100).toFixed(2) + '%');
+        header.classList.toggle('is-scrolled', scrollTop > 18);
+        scrollQueued = false;
+      }
+
+      window.addEventListener('scroll', function () {
+        if (!scrollQueued) {
+          scrollQueued = true;
+          window.requestAnimationFrame(onScroll);
+        }
+      }, { passive: true });
+      onScroll();
+
+      /* ---------- 滚动进入动画 ---------- */
+      var revealItems = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+
+      if ('IntersectionObserver' in window && !reduceMotion.matches) {
+        var revealObserver = new IntersectionObserver(function (entries, observer) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+
+        revealItems.forEach(function (item) { revealObserver.observe(item); });
+      } else {
+        revealItems.forEach(function (item) { item.classList.add('is-visible'); });
+      }
+
+      /* ---------- 当前区块高亮 ---------- */
+      var sections = Array.prototype.slice.call(document.querySelectorAll('main section[id]'));
+      var railLinks = Array.prototype.slice.call(document.querySelectorAll('.section-rail a'));
+
+      if ('IntersectionObserver' in window) {
+        var sectionObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            navLinks.forEach(function (link) {
+              link.classList.toggle('is-active', link.getAttribute('href') === '#' + entry.target.id);
+            });
+            railLinks.forEach(function (link) {
+              var active = link.getAttribute('href') === '#' + entry.target.id;
+              link.classList.toggle('is-active', active);
+              if (active) link.setAttribute('aria-current', 'location');
+              else link.removeAttribute('aria-current');
+            });
+          });
+        }, { rootMargin: '-38% 0px -52% 0px', threshold: 0 });
+
+        sections.forEach(function (section) { sectionObserver.observe(section); });
+      }
+
+      /* ---------- 鼠标光晕 / 卡片聚光 ---------- */
+      if (finePointer.matches && cursorGlow) {
+        var glowX = window.innerWidth / 2;
+        var glowY = window.innerHeight / 2;
+        var targetX = glowX;
+        var targetY = glowY;
+        var glowFrame = null;
+
+        function renderGlow() {
+          glowX += (targetX - glowX) * 0.12;
+          glowY += (targetY - glowY) * 0.12;
+          cursorGlow.style.transform = 'translate(' + (glowX - 270) + 'px,' + (glowY - 270) + 'px)';
+          if (Math.abs(targetX - glowX) > 0.4 || Math.abs(targetY - glowY) > 0.4) {
+            glowFrame = window.requestAnimationFrame(renderGlow);
+          } else {
+            glowFrame = null;
+          }
+        }
+
+        window.addEventListener('pointermove', function (event) {
+          targetX = event.clientX;
+          targetY = event.clientY;
+          if (!body.classList.contains('mouse-ready')) body.classList.add('mouse-ready');
+          if (!glowFrame) glowFrame = window.requestAnimationFrame(renderGlow);
+        }, { passive: true });
+      }
+
+      document.querySelectorAll('[data-spotlight]').forEach(function (card) {
+        card.addEventListener('pointermove', function (event) {
+          var rect = card.getBoundingClientRect();
+          card.style.setProperty('--mx', ((event.clientX - rect.left) / rect.width * 100).toFixed(1) + '%');
+          card.style.setProperty('--my', ((event.clientY - rect.top) / rect.height * 100).toFixed(1) + '%');
+        });
+      });
+
+      /* ---------- 运单轻微 3D ---------- */
+      if (finePointer.matches && waybill && !reduceMotion.matches) {
+        var tiltFrame = null;
+        var tiltX = 0;
+        var tiltY = 0;
+
+        function renderTilt() {
+          waybill.style.transform = 'rotateX(' + tiltX.toFixed(2) + 'deg) rotateY(' + tiltY.toFixed(2) + 'deg) translateY(-3px)';
+          tiltFrame = null;
+        }
+
+        waybill.addEventListener('pointermove', function (event) {
+          var rect = waybill.getBoundingClientRect();
+          var px = (event.clientX - rect.left) / rect.width - 0.5;
+          var py = (event.clientY - rect.top) / rect.height - 0.5;
+          tiltY = px * 7;
+          tiltX = -py * 7;
+          if (!tiltFrame) tiltFrame = window.requestAnimationFrame(renderTilt);
+        });
+
+        waybill.addEventListener('pointerleave', function () {
+          if (tiltFrame) {
+            window.cancelAnimationFrame(tiltFrame);
+            tiltFrame = null;
+          }
+          waybill.style.transform = '';
+        });
+      }
+
+      /* ---------- 提示 ---------- */
+      function showToast(message) {
+        if (!toast) return;
+        toast.textContent = message;
+        toast.classList.add('is-visible');
+        window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(function () {
+          toast.classList.remove('is-visible');
+        }, 2600);
+      }
+
+      function fallbackCopy(text) {
+        var area = document.createElement('textarea');
+        area.value = text;
+        area.setAttribute('readonly', '');
+        area.style.position = 'fixed';
+        area.style.top = '-9999px';
+        area.style.opacity = '0';
+        document.body.appendChild(area);
+        area.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+        document.body.removeChild(area);
+        return ok;
+      }
+
+      function copyLink() {
+        var url = window.location.href;
+        if (window.location.protocol === 'file:') {
+          showToast('现在是本地预览；部署成 https 链接后才能发群');
+          return;
+        }
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(url).then(function () {
+            showToast('链接已复制，去群里甩给同学吧');
+          }).catch(function () {
+            showToast(fallbackCopy(url) ? '链接已复制' : '复制失败，手动复制地址栏吧');
+          });
+        } else {
+          showToast(fallbackCopy(url) ? '链接已复制' : '复制失败，手动复制地址栏吧');
+        }
+      }
+
+      if (shareBtn) {
+        shareBtn.addEventListener('click', function () {
+          var shareData = {
+            title: document.title,
+            text: '看看我的个人主页，交个朋友：',
+            url: window.location.href
+          };
+
+          if (navigator.share) {
+            navigator.share(shareData).catch(function (error) {
+              if (error && error.name === 'AbortError') return;
+              copyLink();
+            });
+          } else {
+            copyLink();
+          }
+        });
+      }
+
+      /* ---------- 年份兜底 ---------- */
+      if (!yearEl) {
+        var footerYear = document.getElementById('year');
+        if (footerYear) footerYear.textContent = new Date().getFullYear();
+      }
+    })();
+  </script>
+</body>
+</html>
