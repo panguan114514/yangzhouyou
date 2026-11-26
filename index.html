@@ -1798,6 +1798,296 @@
       }
       .js .reveal { opacity: 1; transform: none; }
     }
+
+    /* ==========================================================
+       07. 历史与人物
+       ========================================================== */
+    .history {
+      background:
+        linear-gradient(180deg, rgba(255, 253, 247, 0.4), transparent 36%),
+        var(--paper);
+      border-top: 1px solid var(--line);
+    }
+
+    .history-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .era {
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 253, 247, 0.55);
+    }
+
+    .era--modern {
+      background: rgba(228, 236, 234, 0.34);
+      border-color: rgba(58, 111, 93, 0.28);
+    }
+
+    .era__head {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding-bottom: 17px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .era__index {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      flex: 0 0 34px;
+      place-items: center;
+      border: 1px solid var(--seal);
+      border-radius: 50%;
+      color: var(--seal);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .era--modern .era__index {
+      color: var(--water);
+      border-color: var(--water);
+    }
+
+    .era__head h3 {
+      margin: 0 0 3px;
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 23px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      line-height: 1.3;
+    }
+
+    .era__head p {
+      margin: 0;
+      color: var(--ink-3);
+      font-size: 10px;
+      line-height: 1.6;
+    }
+
+    .timeline {
+      position: relative;
+      margin: 0;
+      padding: 0 0 0 22px;
+      list-style: none;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      top: 4px;
+      bottom: 4px;
+      left: 4px;
+      width: 1px;
+      background: var(--line-strong);
+    }
+
+    .timeline__item {
+      position: relative;
+      padding: 0 0 19px;
+    }
+
+    .timeline__item:last-child { padding-bottom: 0; }
+
+    .timeline__item::before {
+      content: "";
+      position: absolute;
+      top: 5px;
+      left: -22px;
+      width: 7px;
+      height: 7px;
+      border: 2px solid var(--paper);
+      border-radius: 50%;
+      background: var(--seal);
+      box-shadow: 0 0 0 1px var(--line-strong);
+    }
+
+    .era--modern .timeline__item::before {
+      background: var(--water);
+    }
+
+    .timeline__item time {
+      display: inline-block;
+      margin-bottom: 4px;
+      color: var(--seal);
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      line-height: 1.5;
+    }
+
+    .era--modern .timeline__item time { color: var(--water); }
+
+    .timeline__item h4 {
+      margin: 0 0 3px;
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .timeline__item p {
+      margin: 0;
+      color: var(--ink-3);
+      font-size: 11.5px;
+      line-height: 1.75;
+    }
+
+    .history-note,
+    .people-note {
+      margin-top: 15px;
+      color: var(--ink-3);
+      font-size: 10px;
+      line-height: 1.7;
+    }
+
+    .people {
+      background: var(--paper-2);
+      border-top: 1px solid var(--line);
+    }
+
+    .people-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .person-card {
+      position: relative;
+      display: flex;
+      min-height: 220px;
+      flex-direction: column;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: rgba(255, 253, 247, 0.72);
+      transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+    }
+
+    .person-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--line-strong);
+      box-shadow: 0 14px 32px rgba(42, 50, 42, 0.08);
+    }
+
+    .person-card__top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .person-card__seal {
+      display: grid;
+      width: 36px;
+      height: 36px;
+      place-items: center;
+      border-radius: 10px;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--serif);
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .person-card__era {
+      color: var(--ink-3);
+      font-family: var(--mono);
+      font-size: 7px;
+      letter-spacing: 0.04em;
+      line-height: 1.5;
+      text-align: right;
+    }
+
+    .person-card h3 {
+      margin: 0 0 1px;
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .person-card__dates {
+      margin: 0 0 8px;
+      color: var(--seal);
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.03em;
+      line-height: 1.5;
+    }
+
+    .person-card__bio {
+      flex: 1;
+      margin: 0 0 12px;
+      color: var(--ink-3);
+      font-size: 11.5px;
+      line-height: 1.7;
+    }
+
+    .person-card__tag {
+      align-self: flex-start;
+      padding: 4px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ink-3);
+      font-size: 9px;
+      line-height: 1.4;
+      background: var(--paper);
+    }
+
+    .food__method {
+      margin-top: 7px !important;
+      padding-top: 6px;
+      border-top: 1px dashed rgba(245, 239, 227, 0.16);
+      color: rgba(220, 233, 227, 0.82) !important;
+      font-size: 11.5px !important;
+      line-height: 1.7 !important;
+    }
+
+    .food__method b {
+      display: inline-block;
+      margin-right: 5px;
+      padding: 2px 5px;
+      border-radius: 3px;
+      background: var(--seal);
+      color: var(--paper);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      line-height: 1.4;
+      vertical-align: 1px;
+    }
+
+    @media (max-width: 1100px) {
+      .people-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 900px) {
+      .history-grid { grid-template-columns: 1fr; }
+      .era { padding: 20px; }
+    }
+
+    @media (max-width: 600px) {
+      .people-grid { grid-template-columns: 1fr; }
+      .person-card { min-height: 0; }
+      .timeline__item p { font-size: 11px; }
+    }
+
   </style>
 </head>
 <body id="top">
@@ -1821,6 +2111,8 @@
         <a href="#yizheng">仪征</a>
         <a href="#baoying">宝应</a>
         <a href="#gaoyou">高邮</a>
+        <a href="#history">历史</a>
+        <a href="#people">名人</a>
         <a href="#food">美食</a>
         <a href="#route">路线</a>
       </nav>
@@ -2673,12 +2965,198 @@
       </div>
     </section>
 
+    <!-- 历史 -->
+    <section class="section history" id="history" aria-labelledby="history-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="kicker"><b>07</b> HISTORY / 时间里的扬州</p>
+          <h2 id="history-title">一条运河，<br>把扬州养了两千年。</h2>
+          <p class="section__desc">
+            扬州的故事，不能只看瘦西湖。先有邗沟，后有运河；先有盐商，后有园林。到了近代，漕运衰落、战火过境，这座城又学着换一种方式生活。
+          </p>
+        </div>
+
+        <div class="history-grid">
+          <div class="era reveal">
+            <div class="era__head">
+              <span class="era__index">A</span>
+              <div>
+                <h3>古代</h3>
+                <p>从邗沟到盐商园林</p>
+              </div>
+            </div>
+            <ol class="timeline">
+              <li class="timeline__item">
+                <time>前 486</time>
+                <div><h4>吴王夫差开邗沟、筑邗城</h4><p>扬州建城史从这里起笔。邗沟沟通长江与淮河，是中国最早有明确记载的运河之一。</p></div>
+              </li>
+              <li class="timeline__item">
+                <time>汉</time>
+                <div><h4>广陵国</h4><p>汉代广陵是诸侯王都，汉墓、漆器、玉器留下厚家底；“广陵”也成为扬州古称。</p></div>
+              </li>
+              <li class="timeline__item">
+                <time>隋</time>
+                <div><h4>大运河与江都</h4><p>隋炀帝开凿大运河，扬州位于长江与运河交汇处，成为南北漕运和盐运枢纽。</p></div>
+              </li>
+              <li class="timeline__item">
+                <time>唐</time>
+                <div><h4>扬一益二</h4><p>唐代扬州富庶甲天下，盐、茶、木材、瓷器在此集散；鉴真从大明寺六次东渡。</p></div>
+              </li>
+              <li class="timeline__item">
+                <time>宋</time>
+                <div><h4>平山堂</h4><p>欧阳修任扬州知州，建平山堂；苏轼等文人往来，留下“文章太守”的佳话。</p></div>
+              </li>
+              <li class="timeline__item">
+                <time>明清</time>
+                <div><h4>盐商与扬州八怪</h4><p>盐业带来园林、戏曲、书画的繁荣；个园、何园、瘦西湖成形，扬州八怪以怪出名。</p></div>
+              </li>
+            </ol>
+          </div>
+
+          <div class="era era--modern reveal" style="--delay: 0.08s">
+            <div class="era__head">
+              <span class="era__index">B</span>
+              <div>
+                <h3>近代以来</h3>
+                <p>漕运变局、抗战与新城</p>
+              </div>
+            </div>
+            <ol class="timeline">
+              <li class="timeline__item">
+                <time>1840s</time>
+                <div><h4>漕运变局</h4><p>近代海运与铁路兴起，运河漕运地位下降，扬州从盐运中心转向近代城市。</p></div>
+              </li>
+              <li class="timeline__item">
+                <time>1911</time>
+                <div><h4>扬州光复</h4><p>武昌起义后，扬州于 1911 年秋光复，旧衙署退出历史舞台。</p></div>
+              </li>
+              <li class="timeline__item">
+                <time>1919</time>
+                <div><h4>五四新思潮</h4><p>五四运动爆发后，扬州学生集会游行，新文化、新思想传入古城，教育与报刊随之变化。</p></div>
+              </li>
+              <li class="timeline__item">
+                <time>1937</time>
+                <div><h4>抗战与沦陷</h4><p>1937 年底扬州沦陷；新四军挺进苏中，水网成为抗日游击战场。</p></div>
+              </li>
+              <li class="timeline__item">
+                <time>1945</time>
+                <div><h4>高邮战役</h4><p>1945 年 12 月，华中野战军发起高邮战役，攻克高邮城，是华中对日最后一役。</p></div>
+              </li>
+              <li class="timeline__item">
+                <time>1949</time>
+                <div><h4>扬州解放</h4><p>1949 年 1 月 25 日扬州解放；随后行政区调整，古城进入新中国时期。</p></div>
+              </li>
+              <li class="timeline__item">
+                <time>1950s–70s</time>
+                <div><h4>江都水利枢纽</h4><p>1961 年开工、1977 年建成，把长江水北送，成为南水北调东线源头。</p></div>
+              </li>
+              <li class="timeline__item">
+                <time>1982</time>
+                <div><h4>首批历史文化名城</h4><p>扬州列入首批国家历史文化名城；瘦西湖、个园、何园等得到系统保护。</p></div>
+              </li>
+              <li class="timeline__item">
+                <time>2006–2020</time>
+                <div><h4>当代扬州</h4><p>2006 年获联合国人居奖；2014 年大运河申遗成功；2019 年入选世界美食之都；2020 年连淮扬镇高铁通车。</p></div>
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <p class="history-note reveal" style="--delay: 0.12s">
+          注：以上为扬州城市史的关键节点，近现代部分按 1840 年以后展开；具体日期与行政区划以地方志和官方资料为准。
+        </p>
+      </div>
+    </section>
+
+    <!-- 名人 -->
+    <section class="section people" id="people" aria-labelledby="people-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="kicker"><b>08</b> PEOPLE / 人物</p>
+          <h2 id="people-title">扬州人，<br>不止一种活法。</h2>
+          <p class="section__desc">
+            从唐代高僧到现代作家，扬州人的共同点，是把手上的事做到极致。籍贯按历史行政区划，古今地名有变化。
+          </p>
+        </div>
+
+        <div class="people-grid">
+          <article class="person-card reveal">
+            <div class="person-card__top"><span class="person-card__seal">鉴</span><span class="person-card__era">唐 · 广陵</span></div>
+            <h3>鉴真</h3>
+            <p class="person-card__dates">688—763</p>
+            <p class="person-card__bio">大明寺住持，六次东渡日本，把律宗、建筑、医药带到奈良。</p>
+            <span class="person-card__tag">六次东渡</span>
+          </article>
+
+          <article class="person-card reveal" style="--delay: 0.04s">
+            <div class="person-card__top"><span class="person-card__seal">欧</span><span class="person-card__era">宋 · 广陵</span></div>
+            <h3>欧阳修</h3>
+            <p class="person-card__dates">1007—1072</p>
+            <p class="person-card__bio">曾任扬州知州，建平山堂，留下“文章太守”的雅号。</p>
+            <span class="person-card__tag">文章太守</span>
+          </article>
+
+          <article class="person-card reveal" style="--delay: 0.08s">
+            <div class="person-card__top"><span class="person-card__seal">秦</span><span class="person-card__era">宋 · 高邮</span></div>
+            <h3>秦观</h3>
+            <p class="person-card__dates">1049—1100</p>
+            <p class="person-card__bio">高邮人，婉约派词人，苏门四学士之一，写尽人间情长。</p>
+            <span class="person-card__tag">婉约词宗</span>
+          </article>
+
+          <article class="person-card reveal" style="--delay: 0.12s">
+            <div class="person-card__top"><span class="person-card__seal">史</span><span class="person-card__era">明末 · 广陵</span></div>
+            <h3>史可法</h3>
+            <p class="person-card__dates">1601—1645</p>
+            <p class="person-card__bio">督师扬州，城破殉难；史公祠与梅花岭记着这段悲壮。</p>
+            <span class="person-card__tag">扬州督师</span>
+          </article>
+
+          <article class="person-card reveal">
+            <div class="person-card__top"><span class="person-card__seal">郑</span><span class="person-card__era">清 · 兴化（旧属扬州府）</span></div>
+            <h3>郑板桥</h3>
+            <p class="person-card__dates">1693—1766</p>
+            <p class="person-card__bio">扬州八怪代表，诗书画三绝，一句“难得糊涂”流传至今。</p>
+            <span class="person-card__tag">扬州八怪</span>
+          </article>
+
+          <article class="person-card reveal" style="--delay: 0.04s">
+            <div class="person-card__top"><span class="person-card__seal">朱</span><span class="person-card__era">近代 · 广陵</span></div>
+            <h3>朱自清</h3>
+            <p class="person-card__dates">1898—1948</p>
+            <p class="person-card__bio">生于东海，长于扬州；《背影》《荷塘月色》写尽普通人的深情。</p>
+            <span class="person-card__tag">散文名篇</span>
+          </article>
+
+          <article class="person-card reveal" style="--delay: 0.08s">
+            <div class="person-card__top"><span class="person-card__seal">汪</span><span class="person-card__era">现代 · 高邮</span></div>
+            <h3>汪曾祺</h3>
+            <p class="person-card__dates">1920—1997</p>
+            <p class="person-card__bio">高邮作家，《受戒》《端午的鸭蛋》把水乡写得干净又好吃。</p>
+            <span class="person-card__tag">高邮水乡</span>
+          </article>
+
+          <article class="person-card reveal" style="--delay: 0.12s">
+            <div class="person-card__top"><span class="person-card__seal">江</span><span class="person-card__era">近代 · 广陵</span></div>
+            <h3>江上青</h3>
+            <p class="person-card__dates">1911—1939</p>
+            <p class="person-card__bio">扬州人，革命烈士，皖东北抗日根据地创建者之一。</p>
+            <span class="person-card__tag">抗日烈士</span>
+          </article>
+        </div>
+
+        <p class="people-note reveal" style="--delay: 0.16s">
+          注：人物按“与扬州有重要关联”选取，古今籍贯与行政区划以史料为准；郑板桥为兴化人，兴化旧属扬州府。
+        </p>
+      </div>
+    </section>
+
     <!-- 美食 -->
     <section class="food" id="food" aria-labelledby="food-title">
       <div class="container">
         <div class="food__head reveal">
           <div>
-            <p class="kicker"><b>07</b> TASTE / 特色美食</p>
+            <p class="kicker"><b>09</b> TASTE / 特色美食</p>
             <h2 id="food-title">一城烟火，<br>半在早茶。</h2>
             <p class="food__intro">
               扬州人把日子过成两顿饭：早上皮包水，晚上水包皮。淮扬菜不靠重口取胜，靠的是刀工、火候和一点不着急。
@@ -2715,6 +3193,7 @@
             <div>
               <h3>扬州早茶</h3>
               <p>三丁包、翡翠烧卖、千层油糕、大煮干丝，配一壶魁龙珠。冶春、富春、趣园都是老名字，具体营业以门店为准。</p>
+              <p class="food__method"><b>做法</b>发面擀皮，猪肉丁、鸡丁、笋丁炒成三丁馅，包好上笼；水沸后蒸 8—10 分钟，配魁龙珠慢慢吃。</p>
             </div>
           </article>
           <article class="food__item">
@@ -2722,6 +3201,7 @@
             <div>
               <h3>扬州炒饭</h3>
               <p>粒粒分明，配料不抢戏。看似家常，最考火候和手上功夫。</p>
+              <p class="food__method"><b>做法</b>隔夜籼米饭打散；蛋液炒香，虾仁、火腿、青豆、香菇下锅，最后下饭大火翻炒，盐调味，葱花起锅。</p>
             </div>
           </article>
           <article class="food__item">
@@ -2729,6 +3209,7 @@
             <div>
               <h3>蟹粉狮子头</h3>
               <p>肉圆松而不散，汤清味厚。秋天蟹粉上市时，最值得认真吃一次。</p>
+              <p class="food__method"><b>做法</b>五花肉细切粗斩，拌蟹粉、姜葱水、蛋清和少量淀粉，团成球；砂锅垫白菜心，小火炖 1.5—2 小时。</p>
             </div>
           </article>
           <article class="food__item">
@@ -2736,6 +3217,7 @@
             <div>
               <h3>大煮干丝</h3>
               <p>豆腐干切得细，鸡汤煨得透。淮扬菜的刀工，都在这盘里。</p>
+              <p class="food__method"><b>做法</b>豆腐干片薄切细丝，开水反复烫去豆腥；鸡汤加虾仁、火腿、鸡丝煮开，下干丝煨透，调味。</p>
             </div>
           </article>
           <article class="food__item">
@@ -2743,6 +3225,7 @@
             <div>
               <h3>盐水鹅</h3>
               <p>扬州人餐桌上的常驻。皮白肉嫩，咸香入味，配粥配酒都合适。</p>
+              <p class="food__method"><b>做法</b>鹅焯水后，用盐、花椒、姜葱腌入味；放入清卤中小火浸煮，关火焖透，冷却后斩件。</p>
             </div>
           </article>
           <article class="food__item">
@@ -2750,6 +3233,7 @@
             <div>
               <h3>湖鲜与荷藕</h3>
               <p>高邮湖的大闸蟹、咸鸭蛋，宝应的荷藕、菱角。从湖荡到餐桌，吃的是时令。</p>
+              <p class="food__method"><b>做法</b>湖蟹清蒸，姜醋蘸食；咸鸭蛋用盐水或黄泥腌 30—40 天，煮熟切开；荷藕切片清炒或煨汤。</p>
             </div>
           </article>
         </div>
@@ -2764,7 +3248,7 @@
     <section class="section route" id="route" aria-labelledby="route-title">
       <div class="container">
         <div class="section-head reveal">
-          <p class="kicker"><b>08</b> ONE DAY / 一日游路线</p>
+          <p class="kicker"><b>10</b> ONE DAY / 一日游路线</p>
           <h2 id="route-title">从早茶，到江边日落</h2>
           <p class="section__desc">
             第一次来扬州，建议把一天留给广陵古城和邗江江岸：上午看园林，中午逛老街，下午读运河，傍晚去江边。不贪多，刚刚好。
