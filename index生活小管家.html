@@ -1,0 +1,2098 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>生活费预警小管家｜月初吃肉，月底吃土？</title>
+  <meta name="description" content="输入本月总预算、今日消费和消费类别，自动计算剩余额度，给出安全、注意、吃土三档预警，并支持一键分享账单。">
+  <meta name="theme-color" content="#f3eee4">
+  <meta name="color-scheme" content="light">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231d2a26'/%3E%3Ctext x='32' y='45' text-anchor='middle' font-family='Arial' font-weight='700' font-size='36' fill='%23d7f36b'%3E%C2%A5%3C/text%3E%3C/svg%3E">
+  <script>
+    (function () { document.documentElement.classList.add('js'); })();
+  </script>
+  <style>
+    /* ==========================================================
+       01. 纸感、墨色、三档信号色
+       ========================================================== */
+    :root {
+      --bg: #f3eee4;
+      --paper: #fffdf7;
+      --paper-2: #ece5d7;
+      --paper-3: #e4dccb;
+      --ink: #1d2a26;
+      --ink-soft: #3e514a;
+      --muted: #708077;
+      --line: #ddd5c4;
+      --line-strong: #c7bca7;
+      --green: #2f6f55;
+      --green-soft: #e5f0e8;
+      --amber: #a86b16;
+      --amber-soft: #f8eed7;
+      --red: #b43b32;
+      --red-soft: #f9e3df;
+      --acid: #d7f36b;
+      --shadow: 0 30px 80px rgba(42, 50, 42, 0.12);
+      --shadow-soft: 0 16px 44px rgba(42, 50, 42, 0.08);
+      --serif: "Songti SC", "STSong", "Noto Serif SC", "SimSun", serif;
+      --sans: "MiSans", "HarmonyOS Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      --mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    *,
+    *::before,
+    *::after { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      min-width: 320px;
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(760px 560px at 90% -8%, rgba(47, 111, 85, 0.1), transparent 66%),
+        radial-gradient(620px 520px at -10% 22%, rgba(180, 59, 50, 0.07), transparent 64%),
+        var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 17px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      opacity: 0.05;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.7'/%3E%3C/svg%3E");
+      mix-blend-mode: multiply;
+    }
+
+    ::selection { background: var(--acid); color: var(--ink); }
+
+    a { color: inherit; text-decoration: none; }
+    button { padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
+    input, select { font: inherit; }
+    fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+    legend { padding: 0; }
+    img, svg { display: block; max-width: 100%; }
+    h1, h2, h3, p, dl, dd, figure, blockquote { margin: 0; }
+
+    :focus-visible {
+      outline: 2px solid var(--ink);
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 48px));
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    .serif { font-family: var(--serif); }
+    .mono {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ==========================================================
+       02. 顶部
+       ========================================================== */
+    .site-header {
+      position: relative;
+      z-index: 10;
+      padding: 18px 0 0;
+    }
+
+    .header__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      flex: 0 0 auto;
+    }
+
+    .brand__mark {
+      display: grid;
+      width: 40px;
+      height: 40px;
+      place-items: center;
+      border-radius: 11px;
+      background: var(--ink);
+      color: var(--acid);
+      font-family: var(--mono);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1;
+      box-shadow: 0 8px 22px rgba(29, 42, 38, 0.16);
+      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .brand:hover .brand__mark { transform: rotate(-7deg) scale(1.04); }
+
+    .brand__text { display: flex; flex-direction: column; gap: 1px; }
+
+    .brand__name {
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      line-height: 1.2;
+    }
+
+    .brand__sub {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      line-height: 1.4;
+    }
+
+    .header__meta {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.06em;
+      line-height: 1.5;
+    }
+
+    .header__meta i {
+      width: 1px;
+      height: 14px;
+      background: var(--line-strong);
+    }
+
+    .header__meta b { color: var(--ink-soft); font-weight: 600; }
+
+    /* ==========================================================
+       03. 首屏 / 工具
+       ========================================================== */
+    .hero {
+      position: relative;
+      padding: clamp(44px, 6vw, 72px) 0 clamp(70px, 9vw, 112px);
+    }
+
+    .hero::before {
+      content: "¥";
+      position: absolute;
+      top: 2%;
+      right: -1.5%;
+      z-index: -1;
+      color: transparent;
+      font-family: var(--serif);
+      font-size: clamp(220px, 35vw, 520px);
+      font-weight: 700;
+      line-height: 1;
+      opacity: 0.055;
+      -webkit-text-stroke: 1px var(--ink);
+      pointer-events: none;
+    }
+
+    .hero__head {
+      max-width: 780px;
+      margin-bottom: clamp(32px, 5vw, 48px);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 7px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      line-height: 1;
+      background: rgba(255, 253, 247, 0.45);
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--red);
+    }
+
+    .hero h1 {
+      margin: 20px 0 17px;
+      font-family: var(--serif);
+      font-size: clamp(3.9rem, 8.6vw, 7.7rem);
+      font-weight: 700;
+      letter-spacing: -0.075em;
+      line-height: 0.93;
+    }
+
+    .hero h1 em {
+      color: var(--red);
+      font-style: normal;
+    }
+
+    .hero__lead {
+      max-width: 640px;
+      color: var(--ink-soft);
+      font-size: 15.5px;
+      line-height: 1.9;
+    }
+
+    .hero__lead strong { color: var(--ink); font-weight: 750; }
+
+    .hero__chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 21px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.5;
+      background: rgba(255, 253, 247, 0.42);
+    }
+
+    .chip::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .chip:nth-child(2)::before { background: var(--amber); }
+    .chip:nth-child(3)::before { background: var(--red); }
+
+    .app {
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(400px, 0.98fr);
+      gap: clamp(20px, 3.4vw, 34px);
+      align-items: start;
+    }
+
+    .panel {
+      position: relative;
+      padding: clamp(22px, 3vw, 32px);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background:
+        linear-gradient(150deg, rgba(255, 255, 255, 0.78), rgba(255, 253, 247, 0.38)),
+        var(--paper);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .panel__head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 17px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel__head .mono { color: var(--muted); }
+
+    .panel__head h2 {
+      margin: 6px 0 0;
+      font-family: var(--serif);
+      font-size: clamp(1.6rem, 2.7vw, 2.15rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+    }
+
+    .panel__step {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+
+    .panel__step::before {
+      content: "";
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .form { padding-top: 5px; }
+
+    .field { padding: 18px 0 4px; border-bottom: 1px solid var(--line); }
+    .field:last-of-type { border-bottom: 0; }
+
+    .field__top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 9px;
+    }
+
+    .field label,
+    .field legend {
+      display: inline-block;
+      padding: 0;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 750;
+      line-height: 1.4;
+    }
+
+    .field label span,
+    .field legend span {
+      margin-left: 9px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 8px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+    }
+
+    .field__hint {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+
+    .input-shell {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 62px;
+      padding: 7px 15px;
+      border: 1px solid var(--line-strong);
+      border-radius: 13px;
+      background: rgba(255, 253, 247, 0.66);
+      transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .input-shell:focus-within {
+      border-color: var(--ink);
+      background: var(--paper);
+      box-shadow: 0 0 0 4px rgba(47, 111, 85, 0.09);
+    }
+
+    .input-shell .prefix {
+      color: var(--muted);
+      font-family: var(--serif);
+      font-size: 21px;
+      line-height: 1;
+    }
+
+    .input-shell input {
+      width: 100%;
+      min-width: 0;
+      padding: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      appearance: textfield;
+      -moz-appearance: textfield;
+    }
+
+    .input-shell input::-webkit-outer-spin-button,
+    .input-shell input::-webkit-inner-spin-button {
+      margin: 0;
+      -webkit-appearance: none;
+    }
+
+    .input-shell input::placeholder {
+      color: #b8b2a5;
+      font-weight: 500;
+    }
+
+    .input-shell .suffix {
+      color: var(--muted);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .field.has-error .input-shell {
+      border-color: var(--red);
+      background: var(--red-soft);
+      box-shadow: 0 0 0 3px rgba(180, 59, 50, 0.08);
+    }
+
+    .error {
+      min-height: 18px;
+      padding: 4px 1px 0;
+      color: var(--red);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .field--category { padding-bottom: 13px; }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+    }
+
+    .segmented label {
+      position: relative;
+      display: block;
+      cursor: pointer;
+    }
+
+    .segmented input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .segmented label span {
+      display: flex;
+      min-height: 61px;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: rgba(255, 253, 247, 0.45);
+      text-align: center;
+      transition: border-color 0.25s ease, background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+    }
+
+    .segmented label span b {
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .segmented label span small {
+      color: var(--muted);
+      font-size: 9px;
+      line-height: 1.3;
+    }
+
+    .segmented input:checked + span {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: var(--paper);
+      box-shadow: 0 8px 22px rgba(29, 42, 38, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .segmented input:checked + span b { color: var(--paper); }
+    .segmented input:checked + span small { color: #b9cbc1; }
+    .segmented input:focus-visible + span { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+    .field.has-error .segmented label span { border-color: var(--red); }
+
+    .form__actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 19px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 49px;
+      padding: 0 18px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 750;
+      line-height: 1;
+      white-space: nowrap;
+      transition: transform 0.28s ease, background 0.28s ease, color 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
+    }
+
+    .btn svg { width: 15px; height: 15px; }
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn--primary {
+      flex: 1;
+      background: var(--ink);
+      color: var(--paper);
+      box-shadow: 0 11px 26px rgba(29, 42, 38, 0.15);
+    }
+
+    .btn--primary:hover { box-shadow: 0 15px 34px rgba(29, 42, 38, 0.2); }
+
+    .btn--ghost {
+      border-color: var(--line-strong);
+      background: transparent;
+      color: var(--ink-soft);
+    }
+
+    .btn--ghost:hover { background: var(--paper-2); border-color: var(--ink); }
+
+    .example-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 13px;
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 650;
+      line-height: 1.5;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-thickness: 1px;
+    }
+
+    .example-btn:hover { color: var(--ink); }
+
+    .form__note {
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+      margin-top: 13px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--line);
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.6;
+    }
+
+    .form__note::before {
+      content: "●";
+      color: var(--green);
+      font-size: 7px;
+      line-height: 1.8;
+    }
+
+    /* ==========================================================
+       04. 账单结果
+       ========================================================== */
+    .receipt {
+      --state: var(--muted);
+      --state-soft: #f2eee5;
+      position: sticky;
+      top: 22px;
+      min-width: 0;
+      overflow: hidden;
+      padding: clamp(21px, 3vw, 28px);
+      border: 1px solid var(--line-strong);
+      border-radius: 24px;
+      background:
+        radial-gradient(120% 80% at 100% 0%, var(--state-soft), transparent 56%),
+        linear-gradient(155deg, var(--paper), #faf6ec);
+      box-shadow: var(--shadow);
+      transition: border-color 0.35s ease, background 0.35s ease;
+    }
+
+    .receipt.state-safe { --state: var(--green); --state-soft: var(--green-soft); border-color: rgba(47, 111, 85, 0.35); }
+    .receipt.state-warn { --state: var(--amber); --state-soft: var(--amber-soft); border-color: rgba(168, 107, 22, 0.35); }
+    .receipt.state-danger { --state: var(--red); --state-soft: var(--red-soft); border-color: rgba(180, 59, 50, 0.42); }
+    .receipt.state-empty { --state: var(--muted); --state-soft: #f2eee5; }
+
+    .receipt::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 28px;
+      right: 28px;
+      height: 2px;
+      border-radius: 0 0 4px 4px;
+      background: var(--state);
+      opacity: 0.75;
+    }
+
+    .receipt__top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 4px 0 15px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .receipt__top .mono { color: var(--muted); }
+
+    .receipt__top h2 {
+      margin: 5px 0 0;
+      font-family: var(--serif);
+      font-size: clamp(1.65rem, 2.8vw, 2.2rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+
+    .receipt__no {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.07em;
+      line-height: 1.6;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .receipt__no b { display: block; color: var(--ink-soft); font-size: 11px; font-weight: 600; }
+
+    .receipt__status {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 54px;
+      margin: 15px 0 4px;
+      padding-right: 95px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      flex: 0 0 8px;
+      border-radius: 50%;
+      background: var(--state);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--state) 12%, transparent);
+    }
+
+    .receipt__status > span:not(.stamp):not(.status-dot) {
+      color: var(--state);
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.4;
+    }
+
+    .stamp {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 76px;
+      min-height: 44px;
+      padding: 4px 8px;
+      border: 2px solid var(--state);
+      border-radius: 6px;
+      color: var(--state);
+      font-family: var(--serif);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      line-height: 1.1;
+      opacity: 0.86;
+      transform: rotate(7deg);
+      transition: color 0.35s ease, border-color 0.35s ease, opacity 0.35s ease;
+    }
+
+    .receipt.state-empty .stamp { opacity: 0.38; }
+
+    .remaining {
+      padding: 10px 0 14px;
+    }
+
+    .remaining > span {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.4;
+    }
+
+    .remaining strong {
+      display: inline-block;
+      color: var(--state);
+      font-family: var(--serif);
+      font-size: clamp(3rem, 6vw, 4.9rem);
+      font-weight: 700;
+      letter-spacing: -0.07em;
+      line-height: 0.98;
+      transition: color 0.35s ease;
+    }
+
+    .remaining small {
+      display: inline-block;
+      margin-left: 9px;
+      color: var(--state);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      vertical-align: 0.45em;
+    }
+
+    .gauge-wrap { margin-top: 2px; }
+
+    .gauge {
+      position: relative;
+      height: 9px;
+      overflow: hidden;
+      border-radius: 999px;
+      background:
+        linear-gradient(90deg, rgba(180, 59, 50, 0.16) 0 20%, rgba(168, 107, 22, 0.13) 20% 50%, rgba(47, 111, 85, 0.12) 50% 100%);
+    }
+
+    .gauge__fill {
+      display: block;
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--state);
+      transition: width 0.55s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.35s ease;
+    }
+
+    .gauge__threshold {
+      position: absolute;
+      top: -2px;
+      bottom: -2px;
+      width: 1px;
+      background: var(--paper);
+      opacity: 0.9;
+    }
+
+    .gauge__threshold.t20 { left: 20%; }
+    .gauge__threshold.t50 { left: 50%; }
+
+    .gauge__labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 7px;
+      letter-spacing: 0.03em;
+    }
+
+    .receipt__rows {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      margin: 18px 0 0;
+      border-top: 1px dashed var(--line);
+      border-bottom: 1px dashed var(--line);
+    }
+
+    .receipt__rows > div {
+      min-width: 0;
+      padding: 12px 9px 11px;
+      border-right: 1px solid var(--line);
+    }
+
+    .receipt__rows > div:last-child { border-right: 0; }
+
+    .receipt__rows dt {
+      margin-bottom: 4px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 7px;
+      letter-spacing: 0.06em;
+      line-height: 1.5;
+    }
+
+    .receipt__rows dd {
+      overflow: hidden;
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 750;
+      line-height: 1.4;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .advice {
+      position: relative;
+      margin: 16px 0 0;
+      padding: 12px 13px 12px 14px;
+      border-left: 2px solid var(--state);
+      border-radius: 0 9px 9px 0;
+      background: var(--state-soft);
+      color: var(--ink-soft);
+      font-size: 12.5px;
+      line-height: 1.8;
+      transition: background 0.35s ease, border-color 0.35s ease;
+    }
+
+    .advice b { color: var(--ink); font-weight: 800; }
+
+    .category-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.6;
+    }
+
+    .category-note::before {
+      content: "↳";
+      color: var(--state);
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    .receipt__actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .share-btn {
+      display: inline-flex;
+      flex: 1;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 46px;
+      padding: 0 15px;
+      border: 1px solid var(--state);
+      border-radius: 999px;
+      background: var(--state);
+      color: var(--paper);
+      font-size: 12px;
+      font-weight: 750;
+      line-height: 1;
+      transition: transform 0.28s ease, opacity 0.28s ease, box-shadow 0.28s ease;
+    }
+
+    .share-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 24px color-mix(in srgb, var(--state) 20%, transparent); }
+    .share-btn:disabled { cursor: not-allowed; opacity: 0.35; }
+    .share-btn svg { width: 14px; height: 14px; }
+
+    .receipt__foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 15px;
+      padding-top: 11px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 7px;
+      letter-spacing: 0.06em;
+      line-height: 1.6;
+    }
+
+    .receipt__foot b { color: var(--ink-soft); font-weight: 600; }
+
+    .barcode {
+      height: 26px;
+      margin-top: 10px;
+      border-radius: 2px;
+      opacity: 0.55;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--ink) 0 1px,
+        transparent 1px 3px,
+        var(--ink) 3px 5px,
+        transparent 5px 8px,
+        var(--ink) 8px 9px,
+        transparent 9px 12px,
+        var(--ink) 12px 15px,
+        transparent 15px 17px
+      );
+    }
+
+    .receipt.is-fresh { animation: receiptPop 0.45s ease; }
+
+    @keyframes receiptPop {
+      0% { transform: translateY(3px); }
+      50% { transform: translateY(-2px); }
+      100% { transform: translateY(0); }
+    }
+
+    /* ==========================================================
+       05. 规则区
+       ========================================================== */
+    .rules {
+      padding: clamp(66px, 8vw, 100px) 0 clamp(70px, 8vw, 106px);
+      border-top: 1px solid var(--line);
+      background: rgba(255, 253, 247, 0.2);
+    }
+
+    .rules__head {
+      max-width: 700px;
+      margin-bottom: 30px;
+    }
+
+    .rules__head .mono { color: var(--muted); }
+
+    .rules__head h2 {
+      margin: 12px 0 10px;
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4.2vw, 3.5rem);
+      font-weight: 700;
+      letter-spacing: -0.045em;
+      line-height: 1.1;
+    }
+
+    .rules__head p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .rule-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .rule-card {
+      position: relative;
+      overflow: hidden;
+      padding: 19px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 253, 247, 0.35);
+    }
+
+    .rule-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 19px;
+      right: 19px;
+      height: 3px;
+      border-radius: 0 0 3px 3px;
+      background: var(--rule-state);
+    }
+
+    .rule-card--safe { --rule-state: var(--green); }
+    .rule-card--warn { --rule-state: var(--amber); }
+    .rule-card--danger { --rule-state: var(--red); }
+
+    .rule-card__top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.07em;
+      line-height: 1.5;
+    }
+
+    .rule-card__top strong {
+      color: var(--rule-state);
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .rule-card h3 {
+      margin: 8px 0 5px;
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .rule-card p {
+      color: var(--muted);
+      font-size: 11.5px;
+      line-height: 1.75;
+    }
+
+    .guardrails {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-top: 21px;
+      padding: 21px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 253, 247, 0.28);
+    }
+
+    .guardrails h3 {
+      margin: 0 0 9px;
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .guardrails h3 span {
+      margin-left: 7px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 8px;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+    }
+
+    .guardrails ul {
+      display: grid;
+      gap: 6px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .guardrails li {
+      position: relative;
+      padding-left: 14px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.65;
+    }
+
+    .guardrails li::before {
+      content: "×";
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: var(--red);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .sample {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      margin-top: 15px;
+      padding: 13px 15px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 13px;
+      background: var(--paper-2);
+      color: var(--ink-soft);
+      font-family: var(--mono);
+      font-size: 9px;
+      line-height: 1.7;
+    }
+
+    .sample b {
+      display: grid;
+      width: 28px;
+      height: 28px;
+      flex: 0 0 28px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--red);
+      color: var(--paper);
+      font-family: var(--serif);
+      font-size: 13px;
+    }
+
+    .sample strong { color: var(--red); font-weight: 700; }
+
+    /* ==========================================================
+       06. 页脚 / 提示
+       ========================================================== */
+    .site-footer {
+      padding: 27px 0 34px;
+      border-top: 1px solid var(--line);
+    }
+
+    .footer__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.7;
+    }
+
+    .footer__inner strong { color: var(--ink-soft); font-weight: 700; }
+
+    .footer__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.05em;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: max(22px, env(safe-area-inset-bottom));
+      left: 50%;
+      z-index: 200;
+      max-width: calc(100vw - 32px);
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--paper);
+      box-shadow: var(--shadow);
+      font-size: 12px;
+      line-height: 1.5;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 14px);
+      transition: opacity 0.28s ease, transform 0.28s ease;
+    }
+
+    .toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
+    .toast.is-danger { background: var(--red); color: var(--paper); }
+
+    /* ==========================================================
+       07. 响应式
+       ========================================================== */
+    @media (max-width: 1000px) {
+      .app { grid-template-columns: minmax(0, 1fr) minmax(350px, 0.9fr); }
+      .receipt { padding: 22px; }
+      .receipt__rows > div { padding-right: 6px; padding-left: 6px; }
+    }
+
+    @media (max-width: 900px) {
+      .app { grid-template-columns: 1fr; }
+      .receipt { position: relative; top: auto; }
+      .hero__head { max-width: 720px; }
+    }
+
+    @media (max-width: 720px) {
+      .container { width: calc(100% - 30px); }
+      .site-header { padding-top: 13px; }
+      .header__inner { padding-bottom: 12px; }
+      .header__meta { display: none; }
+      .hero { padding: 36px 0 62px; }
+      .hero h1 { font-size: clamp(3.2rem, 14.5vw, 5.2rem); }
+      .hero__lead { font-size: 14px; }
+      .hero__chips { margin-top: 16px; }
+      .panel { padding: 20px; border-radius: 19px; }
+      .receipt { padding: 20px; border-radius: 19px; }
+      .receipt__rows dd { font-size: 13px; }
+      .rules { padding: 60px 0 72px; }
+      .rule-grid { grid-template-columns: 1fr; gap: 8px; }
+      .guardrails { grid-template-columns: 1fr; gap: 17px; padding: 17px; }
+      .rule-card { padding: 16px; }
+      .rule-card h3 { font-size: 19px; }
+    }
+
+    @media (max-width: 520px) {
+      .container { width: calc(100% - 24px); }
+      .brand__name { font-size: 17px; }
+      .brand__sub { font-size: 7px; }
+      .hero h1 { font-size: clamp(3rem, 15vw, 4.2rem); }
+      .hero::before { font-size: 220px; }
+      .eyebrow { font-size: 8px; }
+      .hero__lead { font-size: 13px; }
+      .chip { font-size: 9px; padding: 4px 7px; }
+      .panel { padding: 16px; }
+      .panel__head h2 { font-size: 1.5rem; }
+      .panel__step { display: none; }
+      .input-shell { min-height: 56px; padding: 6px 11px; }
+      .input-shell input { font-size: 26px; }
+      .segmented label span { min-height: 56px; padding: 6px 5px; }
+      .segmented label span b { font-size: 15px; }
+      .segmented label span small { font-size: 8px; }
+      .form__actions { gap: 7px; }
+      .btn { min-height: 46px; padding: 0 14px; font-size: 12px; }
+      .receipt { padding: 17px; }
+      .receipt__status { padding-right: 78px; }
+      .stamp { min-width: 66px; min-height: 39px; font-size: 13px; }
+      .remaining strong { font-size: clamp(2.7rem, 13vw, 4rem); }
+      .remaining small { margin-left: 5px; font-size: 10px; }
+      .receipt__rows { grid-template-columns: 1fr 1fr 1fr; }
+      .receipt__rows dt { font-size: 6px; }
+      .receipt__rows dd { font-size: 12px; }
+      .advice { font-size: 12px; }
+      .receipt__foot { display: block; }
+      .receipt__foot span { display: block; }
+      .site-footer { padding-bottom: 26px; }
+      .footer__inner { display: block; }
+      .footer__meta { margin-top: 9px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header__inner">
+      <a class="brand" href="#top" aria-label="生活费预警小管家，回到顶部">
+        <span class="brand__mark" aria-hidden="true">¥</span>
+        <span class="brand__text">
+          <span class="brand__name">生活费预警小管家</span>
+          <span class="brand__sub">P2 · MONTHLY BUDGET GUARD / 2026</span>
+        </span>
+      </a>
+      <div class="header__meta">
+        <b>条件分支</b><i aria-hidden="true"></i>
+        <b>异常处理</b><i aria-hidden="true"></i>
+        <b>DOM 事件</b>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="container">
+        <div class="hero__head">
+          <p class="eyebrow">MONTHLY BUDGET / 本月生活费</p>
+          <h1 id="page-title">月初吃肉，<br><em>月底吃土？</em></h1>
+          <p class="hero__lead">
+            输入本月总预算、今日消费和消费类别，系统自动计算剩余额度，提前告诉你这个月会不会<strong>吃土</strong>。先算清楚，再决定下一杯奶茶。
+          </p>
+          <div class="hero__chips" aria-label="三档规则">
+            <span class="chip">剩余 &gt; 50% · 安全</span>
+            <span class="chip">20% &lt; 剩余 ≤ 50% · 注意</span>
+            <span class="chip">≤ 20% · 吃土预警</span>
+          </div>
+        </div>
+
+        <div class="app">
+          <form class="panel" id="budget-form" novalidate>
+            <div class="panel__head">
+              <div>
+                <span class="mono">Input / 输入</span>
+                <h2>先填三件事</h2>
+              </div>
+              <span class="panel__step">01 / 算一算</span>
+            </div>
+
+            <div class="form">
+              <div class="field" data-field="budget">
+                <div class="field__top">
+                  <label for="budget">本月总预算 <span>MONTHLY BUDGET</span></label>
+                  <span class="field__hint">必填</span>
+                </div>
+                <div class="input-shell">
+                  <span class="prefix" aria-hidden="true">¥</span>
+                  <input id="budget" name="budget" type="number" min="0" step="0.01" inputmode="decimal" placeholder="1000" autocomplete="off" aria-describedby="budget-error">
+                  <span class="suffix">元</span>
+                </div>
+                <p class="error" id="budget-error" role="alert"></p>
+              </div>
+
+              <div class="field" data-field="spend">
+                <div class="field__top">
+                  <label for="spend">今日消费金额 <span>TODAY'S SPEND</span></label>
+                  <span class="field__hint">按当前已花计算</span>
+                </div>
+                <div class="input-shell">
+                  <span class="prefix" aria-hidden="true">¥</span>
+                  <input id="spend" name="spend" type="number" min="0" step="0.01" inputmode="decimal" placeholder="800" autocomplete="off" aria-describedby="spend-error">
+                  <span class="suffix">元</span>
+                </div>
+                <p class="error" id="spend-error" role="alert"></p>
+              </div>
+
+              <fieldset class="field field--category" data-field="category">
+                <legend>消费类别 <span>CATEGORY</span></legend>
+                <div class="segmented">
+                  <label>
+                    <input type="radio" name="category" value="餐饮" checked>
+                    <span><b>餐饮</b><small>饭 / 奶茶 / 外卖</small></span>
+                  </label>
+                  <label>
+                    <input type="radio" name="category" value="娱乐">
+                    <span><b>娱乐</b><small>电影 / 游戏 / 聚会</small></span>
+                  </label>
+                  <label>
+                    <input type="radio" name="category" value="学习">
+                    <span><b>学习</b><small>书 / 课程 / 文具</small></span>
+                  </label>
+                </div>
+                <p class="error" id="category-error" role="alert"></p>
+              </fieldset>
+
+              <div class="form__actions">
+                <button class="btn btn--primary" type="submit">
+                  生成预警
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M3 8h10M9 4l4 4-4 4"/>
+                  </svg>
+                </button>
+                <button class="btn btn--ghost" type="reset">重置</button>
+              </div>
+
+              <button class="example-btn" type="button" id="example-btn">
+                试试示例：预算 1000 / 消费 800
+                <span aria-hidden="true">↗</span>
+              </button>
+
+              <p class="form__note">计算只在本机进行，不上传任何数据；金额支持小数。</p>
+            </div>
+          </form>
+
+          <aside class="receipt state-empty" id="receipt" aria-live="polite" aria-label="生活费预警结果">
+            <div class="receipt__top">
+              <div>
+                <span class="mono">P2 / BUDGET RECEIPT</span>
+                <h2>本月生活费</h2>
+              </div>
+              <span class="receipt__no">NO.<b id="receipt-no">----</b></span>
+            </div>
+
+            <div class="receipt__status">
+              <span class="status-dot" aria-hidden="true"></span>
+              <span id="status-text">等待输入</span>
+              <span class="stamp" id="stamp" aria-hidden="true">待计算</span>
+            </div>
+
+            <div class="remaining">
+              <span>剩余额度</span>
+              <strong id="remaining">¥ --</strong>
+              <small id="remaining-ratio">--</small>
+            </div>
+
+            <div class="gauge-wrap">
+              <div class="gauge" id="gauge" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="剩余额度比例">
+                <span class="gauge__fill" id="gauge-fill"></span>
+                <i class="gauge__threshold t20" aria-hidden="true"></i>
+                <i class="gauge__threshold t50" aria-hidden="true"></i>
+              </div>
+              <div class="gauge__labels" aria-hidden="true">
+                <span>0</span><span>20%</span><span>50%</span><span>100%</span>
+              </div>
+            </div>
+
+            <dl class="receipt__rows">
+              <div><dt>总预算</dt><dd id="summary-budget">--</dd></div>
+              <div><dt>今日消费</dt><dd id="summary-spend">--</dd></div>
+              <div><dt>消费类别</dt><dd id="summary-category">--</dd></div>
+            </dl>
+
+            <p class="advice" id="advice">填好预算和消费，看看这个月会不会吃土。</p>
+            <p class="category-note" id="category-note">餐饮、娱乐、学习会给出不同建议。</p>
+
+            <div class="receipt__actions">
+              <button class="share-btn" type="button" id="share-btn" disabled>
+                分享账单
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12.5" cy="3.5" r="2.1"/>
+                  <circle cx="3.5" cy="8" r="2.1"/>
+                  <circle cx="12.5" cy="12.5" r="2.1"/>
+                  <path d="m5.4 7 5.2-2.4M5.4 9l5.2 2.4"/>
+                </svg>
+              </button>
+            </div>
+
+            <div class="receipt__foot">
+              <span>STATUS / <b id="foot-status">WAITING</b></span>
+              <span>DATA STAYS LOCAL</span>
+            </div>
+            <div class="barcode" aria-hidden="true"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="rules" id="rules" aria-labelledby="rules-title">
+      <div class="container">
+        <div class="rules__head">
+          <span class="mono">Rule Table / 规则表</span>
+          <h2 id="rules-title">三档预警，<br>不靠感觉靠比例。</h2>
+          <p>剩余比例 =（总预算 − 今日消费）÷ 总预算。按比例判断，不按金额大小拍脑袋。边界规则：20% 本身算吃土，50% 本身算注意。</p>
+        </div>
+
+        <div class="rule-grid">
+          <article class="rule-card rule-card--safe">
+            <div class="rule-card__top"><span>01 / SAFE</span><strong>&gt; 50%</strong></div>
+            <h3>安全区</h3>
+            <p>余量还够。先把接下来几天的饭钱留出来，再考虑娱乐和加购。</p>
+          </article>
+          <article class="rule-card rule-card--warn">
+            <div class="rule-card__top"><span>02 / WATCH</span><strong>20%–50%</strong></div>
+            <h3>注意区</h3>
+            <p>开始踩刹车。列清单、删购物车、把“想要”和“需要”分开。</p>
+          </article>
+          <article class="rule-card rule-card--danger">
+            <div class="rule-card__top"><span>03 / DANGER</span><strong>≤ 20%</strong></div>
+            <h3>吃土预警</h3>
+            <p>立即停止非必要消费，先保证吃饭和交通；已经超支就如实记账。</p>
+          </article>
+        </div>
+
+        <div class="guardrails">
+          <div>
+            <h3>防错清单 <span>GUARDRAILS</span></h3>
+            <ul>
+              <li>总预算为空、非数字或 0 / 负数</li>
+              <li>今日消费为空、非数字或负数</li>
+              <li>消费金额大于总预算 → 超支预警</li>
+              <li>消费类别没有选中</li>
+              <li>金额支持小数，结果保留合理精度</li>
+            </ul>
+          </div>
+          <div>
+            <h3>课堂样例 <span>EXAMPLE</span></h3>
+            <p class="sample">
+              <b aria-hidden="true">!</b>
+              <span>总预算 <strong>1000</strong> − 今日消费 <strong>800</strong> = 剩余 <strong>200</strong><br>200 ÷ 1000 = <strong>20%</strong> → 吃土预警</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <span><strong>P2 · 生活费预警小管家</strong> · 规则是死的，生活是活的；数据只在本地计算。</span>
+      <span class="footer__meta">
+        <span>HTML / CSS / JS</span>
+        <span>DOM2 EVENTS</span>
+        <span>CONDITIONALS</span>
+      </span>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <canvas id="bill-canvas" width="1080" height="1440" style="display:none" aria-hidden="true"></canvas>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var form = document.getElementById('budget-form');
+      var budgetInput = document.getElementById('budget');
+      var spendInput = document.getElementById('spend');
+      var categoryInputs = Array.prototype.slice.call(document.querySelectorAll('input[name="category"]'));
+      var budgetField = document.querySelector('[data-field="budget"]');
+      var spendField = document.querySelector('[data-field="spend"]');
+      var categoryField = document.querySelector('[data-field="category"]');
+      var budgetError = document.getElementById('budget-error');
+      var spendError = document.getElementById('spend-error');
+      var categoryError = document.getElementById('category-error');
+      var receipt = document.getElementById('receipt');
+      var statusText = document.getElementById('status-text');
+      var stamp = document.getElementById('stamp');
+      var remainingEl = document.getElementById('remaining');
+      var ratioEl = document.getElementById('remaining-ratio');
+      var gauge = document.getElementById('gauge');
+      var gaugeFill = document.getElementById('gauge-fill');
+      var summaryBudget = document.getElementById('summary-budget');
+      var summarySpend = document.getElementById('summary-spend');
+      var summaryCategory = document.getElementById('summary-category');
+      var adviceEl = document.getElementById('advice');
+      var categoryNote = document.getElementById('category-note');
+      var shareBtn = document.getElementById('share-btn');
+      var receiptNo = document.getElementById('receipt-no');
+      var footStatus = document.getElementById('foot-status');
+      var exampleBtn = document.getElementById('example-btn');
+      var toast = document.getElementById('toast');
+      var canvas = document.getElementById('bill-canvas');
+      var state = {
+        submitted: false,
+        touched: { budget: false, spend: false, category: false },
+        result: null
+      };
+      var toastTimer;
+
+      var CATEGORY_LABELS = {
+        '餐饮': '餐饮',
+        '娱乐': '娱乐',
+        '学习': '学习'
+      };
+
+      function showToast(message, tone) {
+        if (!toast) return;
+        toast.textContent = message;
+        toast.classList.toggle('is-danger', tone === 'danger');
+        toast.classList.add('is-visible');
+        window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(function () {
+          toast.classList.remove('is-visible');
+        }, 2800);
+      }
+
+      function hideToast() {
+        if (!toast) return;
+        window.clearTimeout(toastTimer);
+        toast.classList.remove('is-visible');
+      }
+
+      function money(value) {
+        var sign = value < 0 ? '-' : '';
+        var absolute = Math.abs(value);
+        var formatted = absolute.toLocaleString('zh-CN', {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2
+        });
+        return sign + '¥' + formatted;
+      }
+
+      function percent(value) {
+        var n = Math.round(value * 1000) / 10;
+        return (Number.isInteger(n) ? n.toFixed(0) : n.toFixed(1)) + '%';
+      }
+
+      function setError(field, message) {
+        field.classList.toggle('has-error', Boolean(message));
+        var error = field.querySelector('.error');
+        if (error) error.textContent = message || '';
+        var input = field.querySelector('input');
+        if (input) input.setAttribute('aria-invalid', message ? 'true' : 'false');
+      }
+
+      function clearErrors() {
+        [budgetField, spendField, categoryField].forEach(function (field) {
+          field.classList.remove('has-error');
+          var error = field.querySelector('.error');
+          if (error) error.textContent = '';
+        });
+        budgetInput.setAttribute('aria-invalid', 'false');
+        spendInput.setAttribute('aria-invalid', 'false');
+        categoryInputs.forEach(function (input) { input.setAttribute('aria-invalid', 'false'); });
+      }
+
+      function numberValue(input) {
+        var raw = input.value.trim();
+        if (!raw) return { empty: true };
+        var value = Number(raw);
+        if (!Number.isFinite(value)) return { invalid: true };
+        return { value: value };
+      }
+
+      function validate(showErrors) {
+        var errors = [];
+        var budgetResult = numberValue(budgetInput);
+        var spendResult = numberValue(spendInput);
+        var categoryInput = categoryInputs.filter(function (input) { return input.checked; })[0];
+
+        if (budgetResult.empty) {
+          errors.push({ field: budgetField, input: budgetInput, message: '请填写本月总预算' });
+        } else if (budgetResult.invalid) {
+          errors.push({ field: budgetField, input: budgetInput, message: '请输入有效的预算数字' });
+        } else if (budgetResult.value <= 0) {
+          errors.push({ field: budgetField, input: budgetInput, message: '总预算必须大于 0' });
+        }
+
+        if (spendResult.empty) {
+          errors.push({ field: spendField, input: spendInput, message: '请填写今日消费金额' });
+        } else if (spendResult.invalid) {
+          errors.push({ field: spendField, input: spendInput, message: '请输入有效的消费数字' });
+        } else if (spendResult.value < 0) {
+          errors.push({ field: spendField, input: spendInput, message: '今日消费不能是负数' });
+        }
+
+        if (!categoryInput) {
+          errors.push({ field: categoryField, input: null, message: '请选择一个消费类别' });
+        }
+
+        if (showErrors) {
+          clearErrors();
+          errors.forEach(function (item) {
+            setError(item.field, item.message);
+          });
+          if (errors.length) {
+            var first = errors[0];
+            if (first.input) first.input.focus();
+            else {
+              var radio = categoryInputs[0];
+              if (radio) radio.focus();
+            }
+          }
+        }
+
+        if (errors.length) return null;
+
+        return {
+          budget: Math.round(budgetResult.value * 100) / 100,
+          spend: Math.round(spendResult.value * 100) / 100,
+          category: categoryInput.value,
+          remaining: Math.round((budgetResult.value - spendResult.value) * 100) / 100,
+          ratio: (budgetResult.value - spendResult.value) / budgetResult.value
+        };
+      }
+
+      function levelFor(ratio) {
+        /* 按页面显示的百分比判断，避免出现“显示 50% 却判安全区”的矛盾 */
+        var shown = Math.round(ratio * 1000) / 10;
+        if (shown <= 20) return 'danger';
+        if (shown <= 50) return 'warn';
+        return 'safe';
+      }
+
+      function adviceFor(data, level) {
+        var overspent = data.remaining < 0;
+        if (overspent) {
+          return {
+            text: '<b>已经超支 ' + money(-data.remaining) + '。</b>先停掉非必要消费，把吃饭和交通的钱留出来；必要时如实跟家里说明情况。',
+            note: '超支不是世界末日，但不能再假装没看见。'
+          };
+        }
+
+        if (level === 'safe') {
+          var safeTips = {
+            '餐饮': '饭钱充足，可以正常吃；但别因为“还有钱”就每天加奶茶。',
+            '娱乐': '娱乐预算还在安全区，给聚会设个上限，别把偶尔变成每天。',
+            '学习': '学习投入值得，但先买必需品，给月底留一笔应急钱。'
+          };
+          return {
+            text: '<b>还在安全区。</b>剩余 ' + percent(data.ratio) + '，先把接下来几天的饭钱和交通费留出来。',
+            note: safeTips[data.category]
+          };
+        }
+
+        if (level === 'warn') {
+          var warnTips = {
+            '餐饮': '饭钱优先。外卖、奶茶、夜宵先减半，食堂也能吃得很好。',
+            '娱乐': '娱乐支出踩刹车：这周的局减掉一半，电影和游戏先放购物车。',
+            '学习': '资料按需买，先用手头资源；别让“学习”变成冲动消费的借口。'
+          };
+          return {
+            text: '<b>进入注意区。</b>剩余 ' + percent(data.ratio) + '，接下来每一笔都先问一句：真的需要吗？',
+            note: warnTips[data.category]
+          };
+        }
+
+        var dangerTips = {
+          '餐饮': '先把饭卡充够，奶茶、烧烤、外卖先停；吃饭是底线，面子不是。',
+          '娱乐': '娱乐预算清零。聚会改散步、图书馆、操场，零成本也能见面。',
+          '学习': '只买必要资料，先借、先用手头资源，别让学习变成冲动消费。'
+        };
+        return {
+          text: '<b>吃土预警。</b>剩余只剩 ' + percent(data.ratio) + '，立即停止非必要消费，先保吃饭和交通。',
+          note: dangerTips[data.category]
+        };
+      }
+
+      function emptyResult(preserveErrors) {
+        if (!preserveErrors) clearErrors();
+        state.result = null;
+        receipt.className = 'receipt state-empty';
+        statusText.textContent = '等待输入';
+        stamp.textContent = '待计算';
+        remainingEl.textContent = '¥ --';
+        ratioEl.textContent = '--';
+        gauge.setAttribute('aria-valuenow', '0');
+        gaugeFill.style.width = '0%';
+        summaryBudget.textContent = '--';
+        summarySpend.textContent = '--';
+        summaryCategory.textContent = '--';
+        adviceEl.textContent = '填好预算和消费，看看这个月会不会吃土。';
+        categoryNote.textContent = '餐饮、娱乐、学习会给出不同建议。';
+        footStatus.textContent = 'WAITING';
+        receiptNo.textContent = '----';
+        shareBtn.disabled = true;
+      }
+
+      function render(data, animate) {
+        var level = levelFor(data.ratio);
+        var advice = adviceFor(data, level);
+        var statusLabels = {
+          safe: '安全区 · 还能稳稳过',
+          warn: '注意区 · 该踩刹车了',
+          danger: data.remaining < 0 ? '吃土预警 · 已经超支' : '吃土预警'
+        };
+        var stampLabels = {
+          safe: '安全',
+          warn: '注意',
+          danger: '吃土预警'
+        };
+        var fillPercent = Math.max(0, Math.min(100, data.ratio * 100));
+
+        state.result = data;
+        receipt.className = 'receipt state-' + level;
+        statusText.textContent = statusLabels[level];
+        stamp.textContent = stampLabels[level];
+        remainingEl.textContent = money(data.remaining);
+        ratioEl.textContent = percent(data.ratio);
+        gauge.setAttribute('aria-valuenow', String(Math.round(fillPercent)));
+        gaugeFill.style.width = fillPercent.toFixed(2) + '%';
+        summaryBudget.textContent = money(data.budget);
+        summarySpend.textContent = money(data.spend);
+        summaryCategory.textContent = CATEGORY_LABELS[data.category] || data.category;
+        adviceEl.innerHTML = advice.text;
+        categoryNote.textContent = advice.note;
+        footStatus.textContent = level.toUpperCase();
+        receiptNo.textContent = String(Date.now()).slice(-4);
+        shareBtn.disabled = false;
+
+        if (animate) {
+          receipt.classList.remove('is-fresh');
+          void receipt.offsetWidth;
+          receipt.classList.add('is-fresh');
+          window.setTimeout(function () { receipt.classList.remove('is-fresh'); }, 500);
+        }
+      }
+
+      function revealReceipt() {
+        if (window.matchMedia('(max-width: 900px)').matches) {
+          window.setTimeout(function () {
+            receipt.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 120);
+        }
+      }
+
+      function preview() {
+        var data = validate(false);
+        if (data) {
+          render(data, false);
+        } else {
+          if (budgetInput.value.trim() || spendInput.value.trim() || state.submitted) {
+            emptyResult(true);
+          } else {
+            emptyResult(false);
+          }
+        }
+      }
+
+      budgetInput.addEventListener('input', function () {
+        state.touched.budget = true;
+        if (state.submitted || budgetField.classList.contains('has-error')) validate(true);
+        preview();
+      });
+
+      spendInput.addEventListener('input', function () {
+        state.touched.spend = true;
+        if (state.submitted || spendField.classList.contains('has-error')) validate(true);
+        preview();
+      });
+
+      [budgetInput, spendInput].forEach(function (input) {
+        input.addEventListener('blur', function () {
+          if (state.submitted || input.value.trim()) {
+            validate(true);
+            preview();
+          }
+        });
+      });
+
+      categoryInputs.forEach(function (input) {
+        input.addEventListener('change', function () {
+          state.touched.category = true;
+          if (state.submitted) validate(true);
+          preview();
+        });
+      });
+
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        state.submitted = true;
+        state.touched = { budget: true, spend: true, category: true };
+        var data = validate(true);
+        if (!data) {
+          hideToast();
+          emptyResult(true);
+          return;
+        }
+        render(data, true);
+        revealReceipt();
+        showToast('预警已生成：' + statusText.textContent.replace(' · ', '，'), levelFor(data.ratio) === 'danger' ? 'danger' : '');
+      });
+
+      form.addEventListener('reset', function () {
+        hideToast();
+        window.setTimeout(function () {
+          state.submitted = false;
+          state.touched = { budget: false, spend: false, category: false };
+          emptyResult();
+          budgetInput.focus();
+        }, 0);
+      });
+
+      exampleBtn.addEventListener('click', function () {
+        budgetInput.value = '1000';
+        spendInput.value = '800';
+        categoryInputs.forEach(function (input) {
+          input.checked = input.value === '餐饮';
+        });
+        state.submitted = true;
+        var data = validate(true);
+        if (data) {
+          render(data, true);
+          revealReceipt();
+          showToast('吃土预警：1000 − 800 = 20%，先保饭钱', 'danger');
+        }
+      });
+
+      /* ========================================================
+         分享账单：Canvas → PNG → Web Share / 下载
+         ======================================================== */
+      function roundRect(ctx, x, y, w, h, r) {
+        var radius = Math.min(r, w / 2, h / 2);
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.arcTo(x + w, y, x + w, y + h, radius);
+        ctx.arcTo(x + w, y + h, x, y + h, radius);
+        ctx.arcTo(x, y + h, x, y, radius);
+        ctx.arcTo(x, y, x + w, y, radius);
+        ctx.closePath();
+      }
+
+      function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines) {
+        var line = '';
+        var lines = [];
+        for (var i = 0; i < text.length; i++) {
+          var test = line + text[i];
+          if (ctx.measureText(test).width > maxWidth && line) {
+            lines.push(line);
+            line = text[i];
+            if (lines.length >= maxLines) break;
+          } else {
+            line = test;
+          }
+        }
+        if (line && lines.length < maxLines) lines.push(line);
+        lines.forEach(function (item, index) {
+          ctx.fillText(item, x, y + index * lineHeight);
+        });
+        return y + lines.length * lineHeight;
+      }
+
+      function billText(data) {
+        var level = levelFor(data.ratio);
+        var label = level === 'safe' ? '安全区' : level === 'warn' ? '注意区' : '吃土预警';
+        return [
+          '生活费预警账单',
+          '本月总预算：' + money(data.budget),
+          '今日消费：' + money(data.spend),
+          '消费类别：' + data.category,
+          '剩余额度：' + money(data.remaining) + '（' + percent(data.ratio) + '）',
+          '预警等级：' + label,
+          'P2 · 生活费预警小管家'
+        ].join('\n');
+      }
+
+      function drawBill(data) {
+        if (!canvas || !canvas.getContext) return null;
+        var ctx = canvas.getContext('2d');
+        var width = canvas.width;
+        var height = canvas.height;
+        var level = levelFor(data.ratio);
+        var colors = {
+          safe: { main: '#2f6f55', soft: '#e5f0e8' },
+          warn: { main: '#a86b16', soft: '#f8eed7' },
+          danger: { main: '#b43b32', soft: '#f9e3df' }
+        };
+        var color = colors[level];
+        var statusLabel = level === 'safe' ? '安全区' : level === 'warn' ? '注意区' : '吃土预警';
+
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = '#f3eee4';
+        ctx.fillRect(0, 0, width, height);
+
+        /* 顶部深色票据头 */
+        ctx.fillStyle = '#1d2a26';
+        ctx.fillRect(0, 0, width, 285);
+        ctx.fillStyle = '#d7f36b';
+        ctx.font = '600 24px "Microsoft YaHei", sans-serif';
+        ctx.fillText('P2 / MONTHLY BUDGET GUARD', 72, 84);
+        ctx.fillStyle = '#fffdf7';
+        ctx.font = '700 60px "Songti SC", "Microsoft YaHei", serif';
+        ctx.fillText('生活费预警账单', 72, 168);
+        ctx.fillStyle = '#b9cbc1';
+        ctx.font = '400 22px "Microsoft YaHei", sans-serif';
+        ctx.fillText(new Date().toLocaleString('zh-CN', { hour12: false }), 72, 214);
+
+        /* 状态徽章 */
+        ctx.fillStyle = color.main;
+        roundRect(ctx, 72, 326, 248, 54, 27);
+        ctx.fill();
+        ctx.fillStyle = '#fffdf7';
+        ctx.font = '700 25px "Microsoft YaHei", sans-serif';
+        ctx.fillText(statusLabel, 100, 362);
+
+        /* 剩余大数字 */
+        ctx.fillStyle = '#708077';
+        ctx.font = '400 24px "Microsoft YaHei", sans-serif';
+        ctx.fillText('剩余额度', 72, 442);
+        ctx.fillStyle = color.main;
+        ctx.font = '700 92px "Songti SC", "Microsoft YaHei", serif';
+        ctx.fillText(money(data.remaining), 72, 540);
+        ctx.font = '600 27px "SFMono-Regular", Consolas, monospace';
+        ctx.fillText(percent(data.ratio), 72, 588);
+
+        /* 账单行 */
+        var rows = [
+          ['总预算', money(data.budget)],
+          ['今日消费', money(data.spend)],
+          ['消费类别', data.category]
+        ];
+        var rowY = 650;
+        rows.forEach(function (row, index) {
+          var y = rowY + index * 88;
+          ctx.strokeStyle = '#ddd5c4';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(72, y);
+          ctx.lineTo(width - 72, y);
+          ctx.stroke();
+          ctx.fillStyle = '#708077';
+          ctx.font = '400 22px "Microsoft YaHei", sans-serif';
+          ctx.fillText(row[0], 72, y + 40);
+          ctx.fillStyle = '#1d2a26';
+          ctx.font = '700 29px "Microsoft YaHei", sans-serif';
+          ctx.textAlign = 'right';
+          ctx.fillText(row[1], width - 72, y + 40);
+          ctx.textAlign = 'left';
+        });
+
+        /* 建议 */
+        var advice = adviceFor(data, level).text.replace(/<[^>]+>/g, '');
+        var boxY = rowY + rows.length * 88 + 34;
+        ctx.fillStyle = color.soft;
+        roundRect(ctx, 72, boxY, width - 144, 150, 16);
+        ctx.fill();
+        ctx.fillStyle = color.main;
+        ctx.fillRect(72, boxY, 4, 150);
+        ctx.fillStyle = '#3e514a';
+        ctx.font = '400 23px "Microsoft YaHei", sans-serif';
+        wrapText(ctx, advice, 100, boxY + 48, width - 200, 38, 3);
+
+        /* 三档规则 */
+        var ruleY = boxY + 184;
+        ctx.fillStyle = '#708077';
+        ctx.font = '600 16px "SFMono-Regular", Consolas, monospace';
+        ctx.fillText('RULE / 三档预警', 72, ruleY);
+        var ruleItems = [
+          ['> 50%', '安全区', '#2f6f55', '#e5f0e8'],
+          ['20–50%', '注意区', '#a86b16', '#f8eed7'],
+          ['≤ 20%', '吃土预警', '#b43b32', '#f9e3df']
+        ];
+        ruleItems.forEach(function (item, index) {
+          var x = 72 + index * 304;
+          ctx.fillStyle = item[3];
+          roundRect(ctx, x, ruleY + 18, 284, 76, 12);
+          ctx.fill();
+          ctx.fillStyle = item[2];
+          ctx.font = '700 25px "Songti SC", "Microsoft YaHei", serif';
+          ctx.fillText(item[0], x + 17, ruleY + 58);
+          ctx.fillStyle = '#3e514a';
+          ctx.font = '600 19px "Microsoft YaHei", sans-serif';
+          ctx.fillText(item[1], x + 128, ruleY + 58);
+        });
+
+        /* 底部 */
+        ctx.fillStyle = '#708077';
+        ctx.font = '400 20px "Songti SC", "Microsoft YaHei", serif';
+        ctx.fillText('“先算清楚，再决定下一杯奶茶。”', 72, height - 106);
+        ctx.font = '400 18px "SFMono-Regular", Consolas, monospace';
+        ctx.fillText('P2 · 生活费预警小管家 / DATA STAYS LOCAL', 72, height - 70);
+        ctx.fillStyle = '#1d2a26';
+        for (var i = 0; i < 34; i++) {
+          var w = i % 3 === 0 ? 8 : 4;
+          ctx.fillRect(72 + i * 12, height - 42, w, 22);
+        }
+        return canvas;
+      }
+
+      function fallbackDownload(blob, text) {
+        var url = URL.createObjectURL(blob);
+        var link = document.createElement('a');
+        link.href = url;
+        link.download = '生活费预警账单.png';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.setTimeout(function () { URL.revokeObjectURL(url); }, 3000);
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(text).catch(function () {});
+        }
+        showToast('账单图片已下载，文字已尝试复制');
+      }
+
+      function shareBill() {
+        if (!state.result) {
+          showToast('先填对预算和消费，生成一张有效账单');
+          return;
+        }
+        var data = state.result;
+        var drawn = drawBill(data);
+        if (!drawn) {
+          showToast('当前浏览器不支持生成账单图片');
+          return;
+        }
+        var text = billText(data);
+        drawn.toBlob(function (blob) {
+          if (!blob) {
+            showToast('账单图片生成失败，请重试');
+            return;
+          }
+          var file = null;
+          try {
+            file = new File([blob], '生活费预警账单.png', { type: 'image/png' });
+          } catch (e) {}
+          var canShareFile = false;
+          if (file && navigator.share && typeof navigator.canShare === 'function') {
+            try {
+              canShareFile = navigator.canShare({ files: [file] });
+            } catch (error) {
+              canShareFile = false;
+            }
+          }
+          if (canShareFile) {
+            navigator.share({
+              title: '生活费预警账单',
+              text: text,
+              files: [file]
+            }).catch(function (error) {
+              if (error && error.name === 'AbortError') return;
+              fallbackDownload(blob, text);
+            });
+          } else {
+            fallbackDownload(blob, text);
+          }
+        }, 'image/png');
+      }
+
+      shareBtn.addEventListener('click', shareBill);
+      emptyResult();
+    })();
+  </script>
+</body>
+</html>
