@@ -624,6 +624,8 @@
        ========================================================== */
     .receipt {
       --state: var(--muted);
+      --state-deep: #4e5b54;
+      --state-bright: #a9b5ad;
       --state-soft: #f2eee5;
       position: sticky;
       top: 22px;
@@ -633,16 +635,46 @@
       border: 1px solid var(--line-strong);
       border-radius: 24px;
       background:
-        radial-gradient(120% 80% at 100% 0%, var(--state-soft), transparent 56%),
+        radial-gradient(120% 90% at 100% 0%, var(--state-soft), transparent 58%),
+        radial-gradient(90% 80% at 0% 100%, var(--state-soft), transparent 62%),
         linear-gradient(155deg, var(--paper), #faf6ec);
       box-shadow: var(--shadow);
-      transition: border-color 0.35s ease, background 0.35s ease;
+      transition: border-color 0.35s ease, background 0.35s ease, box-shadow 0.35s ease;
     }
 
-    .receipt.state-safe { --state: var(--green); --state-soft: var(--green-soft); border-color: rgba(47, 111, 85, 0.35); }
-    .receipt.state-warn { --state: var(--amber); --state-soft: var(--amber-soft); border-color: rgba(168, 107, 22, 0.35); }
-    .receipt.state-danger { --state: var(--red); --state-soft: var(--red-soft); border-color: rgba(180, 59, 50, 0.42); }
-    .receipt.state-empty { --state: var(--muted); --state-soft: #f2eee5; }
+    .receipt.state-safe {
+      --state: var(--green);
+      --state-deep: #1f513d;
+      --state-bright: #73b294;
+      --state-soft: var(--green-soft);
+      border-color: rgba(47, 111, 85, 0.38);
+      box-shadow: 0 26px 70px rgba(47, 111, 85, 0.13);
+    }
+
+    .receipt.state-warn {
+      --state: var(--amber);
+      --state-deep: #76480d;
+      --state-bright: #d6a04a;
+      --state-soft: var(--amber-soft);
+      border-color: rgba(168, 107, 22, 0.4);
+      box-shadow: 0 26px 70px rgba(168, 107, 22, 0.12);
+    }
+
+    .receipt.state-danger {
+      --state: var(--red);
+      --state-deep: #852a22;
+      --state-bright: #e38478;
+      --state-soft: var(--red-soft);
+      border-color: rgba(180, 59, 50, 0.45);
+      box-shadow: 0 26px 70px rgba(180, 59, 50, 0.14);
+    }
+
+    .receipt.state-empty {
+      --state: var(--muted);
+      --state-deep: #4e5b54;
+      --state-bright: #a9b5ad;
+      --state-soft: #f2eee5;
+    }
 
     .receipt::before {
       content: "";
@@ -652,8 +684,8 @@
       right: 28px;
       height: 2px;
       border-radius: 0 0 4px 4px;
-      background: var(--state);
-      opacity: 0.75;
+      background: linear-gradient(90deg, var(--state-deep), var(--state), var(--state-bright), transparent);
+      opacity: 0.82;
     }
 
     .receipt__top {
@@ -740,7 +772,10 @@
     .receipt.state-empty .stamp { opacity: 0.38; }
 
     .remaining {
-      padding: 10px 0 14px;
+      margin: 7px -8px 0;
+      padding: 14px 12px 18px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--state-soft), transparent 68%);
     }
 
     .remaining > span {
@@ -760,6 +795,16 @@
       letter-spacing: -0.07em;
       line-height: 0.98;
       transition: color 0.35s ease;
+    }
+
+    @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+      .remaining strong {
+        background: linear-gradient(135deg, var(--state-deep), var(--state) 52%, var(--state-bright));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+      }
     }
 
     .remaining small {
@@ -789,7 +834,8 @@
       width: 0;
       height: 100%;
       border-radius: inherit;
-      background: var(--state);
+      background: linear-gradient(90deg, var(--state-deep), var(--state), var(--state-bright));
+      box-shadow: 0 0 12px var(--state-soft);
       transition: width 0.55s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.35s ease;
     }
 
@@ -856,7 +902,7 @@
       padding: 12px 13px 12px 14px;
       border-left: 2px solid var(--state);
       border-radius: 0 9px 9px 0;
-      background: var(--state-soft);
+      background: linear-gradient(135deg, var(--state-soft), color-mix(in srgb, var(--state-soft) 45%, transparent));
       color: var(--ink-soft);
       font-size: 12.5px;
       line-height: 1.8;
@@ -884,30 +930,62 @@
     }
 
     .receipt__actions {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 8px;
       margin-top: 15px;
     }
 
+    .copy-btn,
     .share-btn {
       display: inline-flex;
-      flex: 1;
+      width: 100%;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 7px;
       min-height: 46px;
-      padding: 0 15px;
-      border: 1px solid var(--state);
+      padding: 0 11px;
       border-radius: 999px;
-      background: var(--state);
-      color: var(--paper);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 750;
       line-height: 1;
-      transition: transform 0.28s ease, opacity 0.28s ease, box-shadow 0.28s ease;
+      white-space: nowrap;
+      transition: transform 0.28s ease, opacity 0.28s ease, background 0.28s ease, color 0.28s ease, box-shadow 0.28s ease;
     }
 
-    .share-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 24px color-mix(in srgb, var(--state) 20%, transparent); }
+    .copy-btn {
+      border: 1px solid var(--state);
+      background: color-mix(in srgb, var(--state-soft) 55%, var(--paper));
+      color: var(--state);
+    }
+
+    .copy-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      background: var(--state-soft);
+      box-shadow: 0 10px 24px color-mix(in srgb, var(--state) 12%, transparent);
+    }
+
+    .copy-btn.is-copied {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--paper);
+    }
+
+    .copy-btn:disabled { cursor: not-allowed; opacity: 0.35; }
+    .copy-btn svg { width: 14px; height: 14px; }
+
+    .share-btn {
+      border: 1px solid var(--state);
+      background: linear-gradient(135deg, var(--state), var(--state-deep));
+      color: var(--paper);
+      box-shadow: 0 7px 18px color-mix(in srgb, var(--state) 14%, transparent);
+    }
+
+    .share-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px color-mix(in srgb, var(--state) 24%, transparent);
+    }
+
     .share-btn:disabled { cursor: not-allowed; opacity: 0.35; }
     .share-btn svg { width: 14px; height: 14px; }
 
@@ -1304,6 +1382,7 @@
       .receipt__rows dt { font-size: 6px; }
       .receipt__rows dd { font-size: 12px; }
       .advice { font-size: 12px; }
+      .receipt__actions { grid-template-columns: 1fr; }
       .receipt__foot { display: block; }
       .receipt__foot span { display: block; }
       .site-footer { padding-bottom: 26px; }
@@ -1472,6 +1551,13 @@
             <p class="category-note" id="category-note">餐饮、娱乐、学习会给出不同建议。</p>
 
             <div class="receipt__actions">
+              <button class="copy-btn" type="button" id="copy-btn" disabled>
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="4.2" y="3" width="7.6" height="10.5" rx="1.4"/>
+                  <path d="M6.2 3V2.1h3.6V3"/>
+                </svg>
+                <span id="copy-btn-text" aria-live="polite">一键复制今日账单</span>
+              </button>
               <button class="share-btn" type="button" id="share-btn" disabled>
                 分享账单
                 <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -1588,6 +1674,8 @@
       var adviceEl = document.getElementById('advice');
       var categoryNote = document.getElementById('category-note');
       var shareBtn = document.getElementById('share-btn');
+      var copyBtn = document.getElementById('copy-btn');
+      var copyBtnText = document.getElementById('copy-btn-text');
       var receiptNo = document.getElementById('receipt-no');
       var footStatus = document.getElementById('foot-status');
       var exampleBtn = document.getElementById('example-btn');
@@ -1602,7 +1690,9 @@
       };
       var toastTimer;
       var toast1Timer;
+      var copyTimer;
       var MAX_AMOUNT = 1000000;
+      var COPY_LABEL = '一键复制今日账单';
 
       var CATEGORY_LABELS = {
         '餐饮': '餐饮',
@@ -1816,6 +1906,8 @@
         footStatus.textContent = 'WAITING';
         receiptNo.textContent = '----';
         shareBtn.disabled = true;
+        copyBtn.disabled = true;
+        resetCopyButton();
       }
 
       function render(data, animate) {
@@ -1849,6 +1941,8 @@
         footStatus.textContent = level.toUpperCase();
         receiptNo.textContent = String(Date.now()).slice(-4);
         shareBtn.disabled = false;
+        copyBtn.disabled = false;
+        resetCopyButton();
 
         if (animate) {
           receipt.classList.remove('is-fresh');
@@ -1986,15 +2080,82 @@
       function billText(data) {
         var level = levelFor(data.ratio);
         var label = level === 'safe' ? '安全区' : level === 'warn' ? '注意区' : '吃土预警';
+        var advice = adviceFor(data, level).text.replace(/<[^>]+>/g, '');
         return [
-          '生活费预警账单',
+          '今日账单｜生活费预警',
           '本月总预算：' + money(data.budget),
           '今日消费：' + money(data.spend),
           '消费类别：' + data.category,
           '剩余额度：' + money(data.remaining) + '（' + percent(data.ratio) + '）',
           '预警等级：' + label,
+          '建议：' + advice,
           'P2 · 生活费预警小管家'
         ].join('\n');
+      }
+
+      function resetCopyButton() {
+        window.clearTimeout(copyTimer);
+        if (!copyBtn || !copyBtnText) return;
+        copyBtn.classList.remove('is-copied');
+        copyBtnText.textContent = COPY_LABEL;
+      }
+
+      function markCopied() {
+        if (!copyBtn || !copyBtnText) return;
+        window.clearTimeout(copyTimer);
+        copyBtn.classList.add('is-copied');
+        copyBtnText.textContent = '已复制 ✓';
+        showToast('今日账单已复制');
+        copyTimer = window.setTimeout(function () {
+          copyBtn.classList.remove('is-copied');
+          copyBtnText.textContent = COPY_LABEL;
+        }, 2200);
+      }
+
+      function fallbackCopy(text) {
+        var area = document.createElement('textarea');
+        area.value = text;
+        area.setAttribute('readonly', '');
+        area.style.position = 'fixed';
+        area.style.top = '-9999px';
+        area.style.left = '-9999px';
+        document.body.appendChild(area);
+        area.select();
+        area.setSelectionRange(0, area.value.length);
+        var ok = false;
+        try {
+          ok = document.execCommand('copy');
+        } catch (error) {
+          ok = false;
+        }
+        area.remove();
+        return ok;
+      }
+
+      function copyBill() {
+        if (!state.result) {
+          showToast1('请先生成一份今日账单');
+          return;
+        }
+        var text = billText(state.result);
+        var success = function () {
+          markCopied();
+        };
+        var fail = function () {
+          showToast1('复制失败，请手动选择账单文字');
+        };
+
+        /* Clipboard API1：HTTPS 下优先使用；失败时退回 execCommand */
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+          navigator.clipboard.writeText(text).then(success).catch(function () {
+            if (fallbackCopy(text)) success();
+            else fail();
+          });
+        } else if (fallbackCopy(text)) {
+          success();
+        } else {
+          fail();
+        }
       }
 
       function drawBill(data) {
@@ -2179,6 +2340,7 @@
         }, 'image/png');
       }
 
+      copyBtn.addEventListener('click', copyBill);
       shareBtn.addEventListener('click', shareBill);
       emptyResult();
     })();
