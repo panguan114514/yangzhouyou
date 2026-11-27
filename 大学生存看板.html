@@ -24,9 +24,8 @@
   --radius-sm:12px;
   --shadow:0 1px 2px rgba(30,42,51,.05), 0 14px 30px -22px rgba(30,42,51,.45);
   --cat-study:#3b6ea5;
-  --cat-club:#a8557e;
-  --cat-exam:#b5801f;
   --cat-life:#4f8a5b;
+  --cat-club:#a8557e;
 }
 *,*::before,*::after{ box-sizing:border-box; }
 html{ -webkit-text-size-adjust:100%; }
@@ -134,11 +133,10 @@ input,select{ font:inherit; color:inherit; }
 .ring-bg{ fill:none; stroke:#eceae3; stroke-width:11; }
 .ring-fg{
   fill:none;
-  stroke:url(#ringGrad);
   stroke:var(--accent-2);
   stroke-width:11;
   stroke-linecap:round;
-  transition:stroke-dashoffset .5s ease, stroke .3s;
+  transition:stroke-dashoffset .55s cubic-bezier(.4,0,.2,1), stroke .3s;
 }
 .ring-center{
   position:absolute; inset:0;
@@ -254,9 +252,9 @@ input,select{ font:inherit; color:inherit; }
   background:var(--ink-3); flex:0 0 8px;
 }
 .chip-btn[data-cat="study"] .dot{ background:var(--cat-study); }
-.chip-btn[data-cat="club"] .dot{ background:var(--cat-club); }
-.chip-btn[data-cat="exam"] .dot{ background:var(--cat-exam); }
 .chip-btn[data-cat="life"] .dot{ background:var(--cat-life); }
+.chip-btn[data-cat="club"] .dot{ background:var(--cat-club); }
+.chip-btn[data-cat="all"] .num{ background:#e6ece9; }
 .chip-btn .num{
   font-size:12px; font-weight:700; color:var(--ink-3);
   background:#f0eee8; border-radius:999px;
@@ -375,9 +373,8 @@ input,select{ font:inherit; color:inherit; }
   background:#eef2f6; color:var(--ink-2);
 }
 .task-cat[data-cat="study"]{ background:#e8f0f8; color:#2e5d8f; }
-.task-cat[data-cat="club"]{ background:#f8ebf2; color:#8f3f68; }
-.task-cat[data-cat="exam"]{ background:#fbf2df; color:#8a6114; }
 .task-cat[data-cat="life"]{ background:#e9f3ec; color:#3f6f4c; }
+.task-cat[data-cat="club"]{ background:#f8ebf2; color:#8f3f68; }
 .task-due{ font-weight:600; color:var(--ink-2); }
 .task-due[data-tone="over"]{ color:var(--danger); }
 .task-due[data-tone="soon"]{ color:var(--warn); }
@@ -426,9 +423,8 @@ input,select{ font:inherit; color:inherit; }
 .cp-bar{ height:7px; border-radius:999px; background:#f0eee8; overflow:hidden; }
 .cp-fill{ height:100%; border-radius:999px; background:var(--ink-3); transition:width .4s ease; }
 .cp-item[data-cat="study"] .cp-fill{ background:var(--cat-study); }
-.cp-item[data-cat="club"] .cp-fill{ background:var(--cat-club); }
-.cp-item[data-cat="exam"] .cp-fill{ background:var(--cat-exam); }
 .cp-item[data-cat="life"] .cp-fill{ background:var(--cat-life); }
+.cp-item[data-cat="club"] .cp-fill{ background:var(--cat-club); }
 .tip{ margin:0; font-size:13px; color:var(--ink-2); line-height:1.65; }
 
 /* SECTION: modal */
@@ -548,7 +544,7 @@ input,select{ font:inherit; color:inherit; }
         </div>
       </div>
       <div class="ring-side">
-        <p class="ring-title">这一阵的进度</p>
+        <p class="ring-title" id="ring-title">这一阵的总进度</p>
         <p class="ring-desc" id="ring-desc">—</p>
       </div>
     </div>
@@ -750,11 +746,12 @@ input,select{ font:inherit; color:inherit; }
   /* SECTION: constants */
   var STORE_KEY = 'campus-board-v1';
   var CATS = [
-    { id: 'study', name: '课程DDL' },
-    { id: 'club', name: '社团任务' },
-    { id: 'exam', name: '四六级/考证' },
-    { id: 'life', name: '生活杂事' }
+    { id: 'study', name: '学习', hint: '课程 · 作业 · 考试' },
+    { id: 'life', name: '生活', hint: '起居 · 缴费 · 杂事' },
+    { id: 'club', name: '社团', hint: '例会 · 活动 · 招新' }
   ];
+  var LEGACY_CAT = { exam: 'study', '四六级/考证': 'study', '课程DDL': 'study', '生活杂事': 'life', '社团任务': 'club' };
+  var RING_COLORS = { all: '#2f8f7f', study: '#3b6ea5', life: '#4f8a5b', club: '#a8557e' };
   var PRIOS = [
     { id: 'high', name: '高', weight: 0 },
     { id: 'medium', name: '中', weight: 1 },
@@ -780,6 +777,7 @@ input,select{ font:inherit; color:inherit; }
     storageWarn: document.getElementById('storage-warn'),
     ringFg: document.getElementById('ring-fg'),
     ringPct: document.getElementById('ring-pct'),
+    ringTitle: document.getElementById('ring-title'),
     ringDesc: document.getElementById('ring-desc'),
     statPending: document.getElementById('stat-pending'),
     statDone: document.getElementById('stat-done'),
@@ -909,20 +907,28 @@ input,select{ font:inherit; color:inherit; }
     return { label: '还剩 ' + spanText(diff), tone: diff < DAY ? 'soon' : 'ok' };
   }
   function computeStats(){
-    var total = state.tasks.length;
+    var list = state.filter.cat === 'all'
+      ? state.tasks
+      : state.tasks.filter(function(t){ return t.category === state.filter.cat; });
+    var total = list.length;
     var done = 0, overdue = 0;
-    state.tasks.forEach(function(t){
+    list.forEach(function(t){
       if (t.done) done++;
       else if (isOverdue(t)) overdue++;
     });
     return { total: total, done: done, pending: total - done, overdue: overdue };
   }
+  function viewLabel(){
+    return state.filter.cat === 'all' ? '全部' : catName(state.filter.cat);
+  }
 
   /* SECTION: storage */
   function normalize(t){
     if (!t || typeof t.title !== 'string' || !t.title.trim()) return null;
+    var cat = typeof t.category === 'string' ? t.category : '';
+    if (LEGACY_CAT[cat]) cat = LEGACY_CAT[cat];
     var catOK = false, prioOK = false;
-    CATS.forEach(function(c){ if (c.id === t.category) catOK = true; });
+    CATS.forEach(function(c){ if (c.id === cat) catOK = true; });
     PRIOS.forEach(function(p){ if (p.id === t.priority) prioOK = true; });
     var due = (typeof t.due === 'string' && !isNaN(new Date(t.due).getTime())) ? t.due : '';
     var created = (typeof t.createdAt === 'string' && !isNaN(new Date(t.createdAt).getTime())) ? t.createdAt : isoNow();
@@ -931,7 +937,7 @@ input,select{ font:inherit; color:inherit; }
     return {
       id: (typeof t.id === 'string' && t.id) ? t.id : uid(),
       title: String(t.title).slice(0, 120),
-      category: catOK ? t.category : 'study',
+      category: catOK ? cat : 'study',
       priority: prioOK ? t.priority : 'medium',
       due: due,
       note: typeof t.note === 'string' ? t.note.slice(0, 120) : '',
@@ -987,12 +993,15 @@ input,select{ font:inherit; color:inherit; }
     }
     state.tasks = [
       mk('交《数据结构》实验报告（第 4 章）', 'study', 'high', 2 * DAY + 6 * 3600000, '提交到教学平台，附运行截图', false, 0, 30),
-      mk('背四级核心词汇 List 12', 'exam', 'medium', 8 * 3600000, '晚上睡前过一遍', false, 0, 26),
+      mk('背四级核心词汇 List 12', 'study', 'medium', 8 * 3600000, '晚上睡前过一遍', false, 0, 26),
       mk('高数第 3 章习题（前 10 题）', 'study', 'medium', -1 * DAY, '课上讲的极限部分', false, 0, 52),
       mk('学生会例会：招新分工', 'club', 'medium', DAY + 6 * 3600000, '活动中心 302，带宣传计划', false, 0, 20),
+      mk('社团公众号推文排版', 'club', 'low', 2 * DAY, '配三张活动照片', false, 0, 9),
       mk('宿舍水电费缴一下', 'life', 'low', 3 * DAY, '', false, 0, 14),
+      mk('去校医院做体检预约', 'life', 'medium', DAY + 3 * 3600000, '带学生证', false, 0, 18),
       mk('完成社团招新海报初稿', 'club', 'medium', DAY, '已发给部长看', true, 5, 40),
-      mk('四六级报名信息核对', 'exam', 'high', -2 * DAY, '确认照片和证件号', true, 30, 60)
+      mk('四六级报名信息核对', 'study', 'high', -2 * DAY, '确认照片和证件号', true, 30, 60),
+      mk('换洗床单、收拾书桌', 'life', 'low', -3 * 3600000, '', true, 2, 22)
     ];
     state.trash = [];
   }
@@ -1020,9 +1029,15 @@ input,select{ font:inherit; color:inherit; }
   function paintOverview(){
     var s = computeStats();
     var pct = s.total ? Math.round(s.done / s.total * 100) : 0;
+    var ringColor = RING_COLORS[state.filter.cat] || RING_COLORS.all;
     el.ringPct.textContent = pct + '%';
+    el.ringPct.style.color = state.filter.cat === 'all' ? '' : ringColor;
+    el.ringFg.style.stroke = ringColor;
     el.ringFg.style.strokeDasharray = String(RING_C);
     el.ringFg.style.strokeDashoffset = String(RING_C * (1 - pct / 100));
+    el.ringTitle.textContent = state.filter.cat === 'all'
+      ? '这一阵的总进度'
+      : catName(state.filter.cat) + '的进度';
     el.statPending.textContent = String(s.pending);
     el.statDone.textContent = String(s.done);
     el.statOverdue.textContent = String(s.overdue);
@@ -1031,22 +1046,25 @@ input,select{ font:inherit; color:inherit; }
 
     el.ringDesc.replaceChildren();
     if (!s.total) {
-      el.ringDesc.textContent = '还没有任务，先记下第一件要做的事。';
-    } else {
-      el.ringDesc.appendChild(document.createTextNode('共 ' + s.total + ' 项，已完成 '));
-      var em = document.createElement('em');
-      em.textContent = s.done + ' 项';
-      el.ringDesc.appendChild(em);
-      el.ringDesc.appendChild(document.createTextNode('，还有 ' + s.pending + ' 项在路上'));
-      if (s.overdue) {
-        el.ringDesc.appendChild(document.createTextNode('，其中 '));
-        var ov = document.createElement('span');
-        ov.className = 'over-txt';
-        ov.textContent = s.overdue + ' 项已逾期';
-        el.ringDesc.appendChild(ov);
-      }
-      el.ringDesc.appendChild(document.createTextNode('。'));
+      el.ringDesc.textContent = state.filter.cat === 'all'
+        ? '还没有任务，先记下第一件要做的事。'
+        : '「' + catName(state.filter.cat) + '」下还没有任务，添加时可以选这个分类。';
+      return;
     }
+    el.ringDesc.appendChild(document.createTextNode(viewLabel() + '共 ' + s.total + ' 项，已完成 '));
+    var em = document.createElement('em');
+    em.textContent = s.done + ' 项';
+    em.style.color = ringColor;
+    el.ringDesc.appendChild(em);
+    el.ringDesc.appendChild(document.createTextNode('，还有 ' + s.pending + ' 项在路上'));
+    if (s.overdue) {
+      el.ringDesc.appendChild(document.createTextNode('，其中 '));
+      var ov = document.createElement('span');
+      ov.className = 'over-txt';
+      ov.textContent = s.overdue + ' 项已逾期';
+      el.ringDesc.appendChild(ov);
+    }
+    el.ringDesc.appendChild(document.createTextNode('。'));
   }
 
   function paintChips(){
@@ -1055,9 +1073,10 @@ input,select{ font:inherit; color:inherit; }
     var all = el.tplChip.content.firstElementChild.cloneNode(true);
     all.dataset.cat = 'all';
     all.querySelector('.dot').hidden = true;
-    all.querySelector('.chip-name').textContent = '全部分类';
+    all.querySelector('.chip-name').textContent = '全部';
     all.querySelector('.num').textContent = String(totalPending);
-    all.setAttribute('aria-label', '全部分类，待办 ' + totalPending + ' 项');
+    all.title = '全部：共 ' + state.tasks.length + ' 项，待办 ' + totalPending + ' 项';
+    all.setAttribute('aria-label', '全部，待办 ' + totalPending + ' 项');
     all.classList.toggle('is-active', state.filter.cat === 'all');
     frag.appendChild(all);
 
@@ -1068,8 +1087,8 @@ input,select{ font:inherit; color:inherit; }
       item.dataset.cat = c.id;
       item.querySelector('.chip-name').textContent = c.name;
       item.querySelector('.num').textContent = String(pending);
-      item.title = c.name + '：共 ' + catTasks.length + ' 项，已完成 ' + (catTasks.length - pending) + ' 项';
-      item.setAttribute('aria-label', c.name + '，待办 ' + pending + ' 项');
+      item.title = c.name + '（' + c.hint + '）：共 ' + catTasks.length + ' 项，已完成 ' + (catTasks.length - pending) + ' 项';
+      item.setAttribute('aria-label', c.name + '分类，待办 ' + pending + ' 项');
       item.classList.toggle('is-active', state.filter.cat === c.id);
       frag.appendChild(item);
     });
@@ -1328,12 +1347,15 @@ input,select{ font:inherit; color:inherit; }
     el.fTitle.value = '';
     el.fNote.value = '';
     el.fDue.value = '';
-    if (state.filter.status === 'done') {
+    if (state.filter.status === 'done' || state.filter.status === 'overdue') {
       state.filter.status = 'all';
       syncStatusTabs();
     }
+    if (state.filter.cat !== 'all' && state.filter.cat !== task.category) {
+      state.filter.cat = task.category;
+    }
     renderAll();
-    showToast('已添加：' + shorten(task.title));
+    showToast('已添加到「' + catName(task.category) + '」：' + shorten(task.title));
     el.fTitle.focus();
   }
 
@@ -1347,7 +1369,7 @@ input,select{ font:inherit; color:inherit; }
     renderAll();
     if (t.done) {
       var s = computeStats();
-      showToast(s.pending ? ('已完成「' + shorten(t.title) + '」，还剩 ' + s.pending + ' 项') : '全部搞定，可以休息一下了');
+      showToast(s.pending ? ('已完成「' + shorten(t.title) + '」，' + viewLabel() + '还剩 ' + s.pending + ' 项') : (viewLabel() + '的任务全部搞定'));
     } else {
       showToast('已改回待办：' + shorten(t.title));
     }
@@ -1464,7 +1486,10 @@ input,select{ font:inherit; color:inherit; }
     var btn = ev.target.closest('.chip-btn');
     if (!btn) return;
     state.filter.cat = btn.dataset.cat || 'all';
+    if (state.filter.cat !== 'all') el.fCat.value = state.filter.cat;
     paintChips();
+    paintOverview();
+    paintCatProgress();
     paintList();
   });
 
